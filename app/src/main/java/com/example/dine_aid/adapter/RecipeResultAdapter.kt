@@ -11,14 +11,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dine_aid.R
-import com.example.dine_aid.data.Result
+import com.example.dine_aid.data.RecipeResult
 
 class RecipeResultAdapter(val context: Context) : RecyclerView.Adapter<RecipeResultAdapter.ItemViewHolder>() {
 
-    private var dataset = listOf<Result>()
+    private var dataset = listOf<RecipeResult>()
 
-    fun submitList(results: List<Result>) {
-        dataset = results
+    fun submitList(recipeResults: List<RecipeResult>) {
+        dataset = recipeResults
         notifyDataSetChanged()
     }
 
@@ -49,6 +49,6 @@ class RecipeResultAdapter(val context: Context) : RecyclerView.Adapter<RecipeRes
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return dataset.size
     }
 }
