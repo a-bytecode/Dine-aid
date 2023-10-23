@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.example.dine_aid.R
 import com.example.dine_aid.databinding.HomeFragmentBinding
 
 class HomeFragment : Fragment() {
@@ -24,5 +26,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // TODO: Homefragment
+
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
     }
 }

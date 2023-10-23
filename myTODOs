@@ -1,0 +1,14 @@
+// TODOs:
+----------------------------------------------------------------------------------------------------
+
+Layout:
+
+- Erstellen im Homefragment den TextInput für den User, im Material Design 3 Layout.
+
+Logik:
+
+- Implementierung des Textinputs in durch das MVVM Konzept in das HomeFragment.
+
+- Erstellung des Retrofit Services und die Inbetriebnahme von der Base API anhand der Dokumentation.
+
+----------------------------------------------------------------------------------------------------

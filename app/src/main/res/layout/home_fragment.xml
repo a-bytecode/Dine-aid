@@ -9,17 +9,39 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/photo_1541795795328_f073b763494e">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="363dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/stroke_image"
+            android:backgroundTint="#FFFFFF"
+            android:elevation="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <Button
+                android:id="@+id/searchBtnG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+        </SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/photo_1541795795328_f073b763494e"
+            android:layout_height="0dp"
+            android:background="#00FFFFFF"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchView"
             tools:listitem="@layout/reciperesult_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
