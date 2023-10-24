@@ -1,5 +1,6 @@
 package com.example.dine_aid.remote
 
+import LoggingInterceptor
 import com.example.dine_aid.BuildConfig
 import com.example.dine_aid.data.RecipeResponse
 import com.example.dine_aid.data.RecipeResult
@@ -19,6 +20,7 @@ const val BASE_URL = "https://api.spoonacular.com/"
 const val API_TOKEN = BuildConfig.API_TOKEN
 
 private val client: OkHttpClient = OkHttpClient.Builder()
+    .addInterceptor(LoggingInterceptor())
     .addInterceptor { chain ->
         val newRequest: Request = chain.request().newBuilder()
             .addHeader("x-api-key", API_TOKEN) // Use the correct header name
@@ -43,7 +45,7 @@ interface RecipeApiService {
     @GET("recipes/complexSearch")
     suspend fun searchRecipes(
         @Query("query") query: String,
-        @Query("imageSize") imageSize: String // Fügen Sie diese Zeile hinzu
+        @Query("imageSize") imageSize: String
     ) : RecipeResponse
 
     object RecipeApi {
