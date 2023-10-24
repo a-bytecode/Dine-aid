@@ -12,6 +12,9 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
     val recipes : LiveData<List<RecipeResult>> = _recipes
 
 
+    val list = listOf<Int>(21323,123123123,123123123,123123123)
+
+
     suspend fun getRecipes(userInput: String) {
 
         val response : RecipeResponse = api.retrofitService.searchRecipes(userInput,"636x393")

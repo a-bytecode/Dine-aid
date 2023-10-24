@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Hier kannst du den Effekt erstellen, z.B., eine Linie am unteren Rand -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_gravity="bottom"
+        android:background="@color/black" />
+
+    <!-- Der Text "Click here to see more" -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click here to see more"
+        android:textColor="@color/white"
+        android:layout_gravity="bottom|center_horizontal"
+        android:padding="8dp"
+        android:background="@color/black" />
+</FrameLayout>

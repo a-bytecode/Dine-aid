@@ -5,10 +5,9 @@ import android.graphics.drawable.AnimatedImageDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -28,8 +27,7 @@ class RecipeResultAdapter(val context: Context) : RecyclerView.Adapter<RecipeRes
 
         val title = view.findViewById<TextView>(R.id.titleTV_item)
         val image = view.findViewById<ImageView>(R.id.imageIV_item)
-//        val completeCardView = view.findViewById<CardView>(R.id.completeCardView)
-
+        val clickToSeeMoreTV = view.findViewById<TextView>(R.id.clickToSeeMoreTV)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -46,10 +44,6 @@ class RecipeResultAdapter(val context: Context) : RecyclerView.Adapter<RecipeRes
 
         val gif = ContextCompat.getDrawable(context, R.drawable.donuts_gif) as AnimatedImageDrawable
 
-//        val gifImageView = ImageView(context)
-//        gifImageView.setImageDrawable(gif)
-//     holder.completeCardView.background = gifImageView.drawable
-
     // Glide Funktions Notiz:
     // -> Context / Der Bezug auf welches Fragment bzw. Ort sich die Funktion wenden soll.
     // -> load / das Laden des Eigentlichen Hauptbildes.
@@ -57,7 +51,20 @@ class RecipeResultAdapter(val context: Context) : RecyclerView.Adapter<RecipeRes
     // -> into / Den Platz auf den er das Bild laden soll.
         gif.start()
         Glide.with(context).load(recipeData.image).placeholder(gif).into(holder.image)
+        holder.clickToSeeMoreTV.visibility = View.GONE
+
+        holder.image.setOnClickListener {
+            holder.clickToSeeMoreTV.visibility = View.VISIBLE
+            holder.clickToSeeMoreTV.animation = AnimationUtils.loadAnimation(context,R.anim.slide_up_animation)
+        }
+
+        holder.clickToSeeMoreTV.setOnClickListener {
+            // TODO -> Implement Navigation
+        }
+
     }
+
+
 
     override fun getItemCount(): Int {
         return dataset.size
