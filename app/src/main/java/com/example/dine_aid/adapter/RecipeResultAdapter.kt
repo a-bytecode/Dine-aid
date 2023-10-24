@@ -45,17 +45,15 @@ class RecipeResultAdapter(val context: Context) : RecyclerView.Adapter<RecipeRes
         holder.title.text = recipeData.title
 
         val gif = ContextCompat.getDrawable(context, R.drawable.donuts_gif) as AnimatedImageDrawable
-//
+
 //        val gifImageView = ImageView(context)
 //        gifImageView.setImageDrawable(gif)
-
-
 //     holder.completeCardView.background = gifImageView.drawable
 
     // Glide Funktions Notiz:
-    // -> Context / Der Bezug auf welches Fragment bzw. Ort sich die Funktion wenden soll. +
+    // -> Context / Der Bezug auf welches Fragment bzw. Ort sich die Funktion wenden soll.
     // -> load / das Laden des Eigentlichen Hauptbildes.
-    // -> placeholder / Platzhalter ersatzbilf (falls er das Bild nicht laden kann)
+    // -> placeholder / Platzhalter ersatzbilf (falls er das Bild nicht laden kann).
     // -> into / Den Platz auf den er das Bild laden soll.
         gif.start()
         Glide.with(context).load(recipeData.image).placeholder(gif).into(holder.image)

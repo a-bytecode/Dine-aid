@@ -31,8 +31,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:background="#00FFFFFF"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/bottomTV"
@@ -60,20 +60,30 @@
 
         <TextView
             android:id="@+id/bottomTV"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="70dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif-smallcaps"
-            android:text="All rights reserved for Dine Aid."
+            android:text="All rights reserved for Dine Aid"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bottomTV"
+            app:srcCompat="@drawable/ic_baseline_copyright_24"
+            app:tint="#FFFFFF" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
