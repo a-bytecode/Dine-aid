@@ -14,7 +14,7 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
 
     suspend fun getRecipes(userInput: String) {
 
-        val response : RecipeResponse = api.retrofitService.searchRecipes(userInput)
+        val response : RecipeResponse = api.retrofitService.searchRecipes(userInput,"636x393")
 
         _recipes.value = response.recipes
 

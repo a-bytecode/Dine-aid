@@ -1,13 +1,22 @@
 package com.example.dine_aid.UI
 
+import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.Constraint
+import androidx.constraintlayout.widget.Constraints
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 import com.example.dine_aid.R
 import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.databinding.HomeFragmentBinding
@@ -38,20 +47,47 @@ class HomeFragment : Fragment() {
         binding.recyclerView.adapter = recipeResultAdapter
 
 
+        val gif = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.thai_gif
+        ) as AnimatedImageDrawable
+
+        val completeConstraint = view?.findViewById<Constraints>(R.id.completeConstraint)
+
+        if (completeConstraint != null) {
+            val gifImageView = ImageView(requireContext())
+            gifImageView.setImageDrawable(gif)
+
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            )
+            gifImageView.layoutParams = layoutParams
+
+            completeConstraint.background = gifImageView.drawable
+
+            Glide.with(requireContext())
+                .load(gif)
+                .placeholder(gif)
+                .into(gifImageView)
+        }
+
+
         val searchView = view.findViewById<SearchView>(R.id.searchView)
 
         viewModel.repo.recipes.observe(viewLifecycleOwner) { recipes ->
             recipeResultAdapter.submitList(recipes)
         }
 
-        // Set an OnQueryTextListener to the SearchView
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Here, you can use the 'query' parameter to make your API request
+
                 if (!query.isNullOrBlank()) {
                     viewModel.getRecipes(query)
                     Log.d("QueryTextTest", "Text -> ${query}")
                 }
+
                 return true
             }
 

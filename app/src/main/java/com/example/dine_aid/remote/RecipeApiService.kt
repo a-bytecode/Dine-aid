@@ -42,7 +42,8 @@ interface RecipeApiService {
 
     @GET("recipes/complexSearch")
     suspend fun searchRecipes(
-        @Query("query") query: String
+        @Query("query") query: String,
+        @Query("imageSize") imageSize: String // Fügen Sie diese Zeile hinzu
     ) : RecipeResponse
 
     object RecipeApi {
