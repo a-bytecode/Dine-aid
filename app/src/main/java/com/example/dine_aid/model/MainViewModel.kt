@@ -6,6 +6,8 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dine_aid.R
@@ -14,12 +16,17 @@ import com.example.dine_aid.remote.RecipeApiService
 import com.example.dine_aid.remote.Repository
 import com.google.android.gms.dynamic.SupportFragmentWrapper
 import kotlinx.coroutines.launch
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 class MainViewModel : ViewModel() {
 
     val api = RecipeApiService.RecipeApi
 
     val repo = Repository(api)
+
+    private val _ingredients = MutableLiveData<List<String>>()
+    val ingredients: LiveData<List<String>> = _ingredients
 
     fun getRecipes(userInput : String) {
         try {
@@ -31,24 +38,53 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun loadRecipeWidgetByID(recipeID : Int) {
+        try {
+            viewModelScope.launch {
+                val htmlCode = repo.loadRecipeWidget(recipeID)
+                val ingredientList = parseHtmlAndExtractIngredients(htmlCode)
+                _ingredients.value = ingredientList
+            }
+        } catch (e: Exception) {
+            Log.d("Request RecipeWidget", "No Response at Recipe Widget $e")
+        }
+    }
+
+    private fun parseHtmlAndExtractIngredients(htmlCode: String): List<String> {
+        val ingredients = mutableListOf<String>()
+        try {
+            val doc: Document = Jsoup.parse(htmlCode)
+            // Verwende CSS-Selektoren, um bestimmte Teile der HTML-Struktur auszuwählen
+            val elements = doc.select("CSS-Selektor") // Ersetze "CSS-Selektor" durch den richtigen Selektor
+
+            // Iteriere durch die ausgewählten HTML-Elemente und extrahiere die Daten
+            for (element in elements) {
+                // Füge die Daten zur Liste der Zutaten hinzu
+                ingredients.add(element.text())
+            }
+        } catch (e: Exception) {
+            // Fehlerbehandlung, falls beim Parsen ein Fehler auftritt
+        }
+        return ingredients
+    }
+
     fun useBottomSheet(supportFragmentManager:FragmentManager) {
 
         val modelBottomSheet = ModalBottomSheet()
 
-        modelBottomSheet.show(supportFragmentManager,modelBottomSheet.tag)
+        modelBottomSheet.show(supportFragmentManager,ModalBottomSheet.TAG)
     }
 
-    fun slideInFromLeftAnimationTV(textView: TextView, view: View, context: Context) {
-        val textAnimate = view.findViewById<TextView>(R.id.bottomTV)
+    fun slideInFromLeftAnimationTV(animatedTextView: TextView, context: Context) {
 
         val animationSlideFromLeft = AnimationUtils.loadAnimation(
             context,
             R.anim.slide_in_from_left
         )
 
-        textAnimate.startAnimation(animationSlideFromLeft)
-
+        animatedTextView.startAnimation(animationSlideFromLeft)
     }
+
 
 
 }

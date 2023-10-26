@@ -2,6 +2,7 @@ package com.example.dine_aid.adapter
 
 import android.content.Context
 import android.graphics.drawable.AnimatedImageDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,17 @@ import com.bumptech.glide.Glide
 import com.example.dine_aid.R
 import com.example.dine_aid.data.ModalBottomSheet
 import com.example.dine_aid.data.RecipeResult
+import com.example.dine_aid.databinding.HomeFragmentBinding
+import com.example.dine_aid.model.MainViewModel
 import kotlinx.coroutines.delay
 
-class RecipeResultAdapter(val context: Context, val supportFragmentManager: FragmentManager,
+class RecipeResultAdapter(
+    val context: Context,
+    val supportFragmentManager: FragmentManager,
+    val viewModel: MainViewModel
 ) : RecyclerView.Adapter<RecipeResultAdapter.ItemViewHolder>() {
 
-    private var dataset = listOf<RecipeResult>()
+    var dataset = listOf<RecipeResult>()
 
     fun submitList(recipeResults: List<RecipeResult>) {
         dataset = recipeResults
@@ -76,10 +82,8 @@ class RecipeResultAdapter(val context: Context, val supportFragmentManager: Frag
         }
 
         holder.clickHereCarView.setOnClickListener {
-
-            val modalBottomSheet = ModalBottomSheet()
-
-            modalBottomSheet.show(supportFragmentManager,ModalBottomSheet.TAG)
+            viewModel.useBottomSheet(supportFragmentManager)
+            Log.d("Receip by ID","Receip ID -> ${recipeData.id}")
         }
 
     }

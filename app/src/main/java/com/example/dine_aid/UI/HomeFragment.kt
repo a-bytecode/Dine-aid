@@ -43,25 +43,26 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // TODO: Homefragment
 
-        val recipeResultAdapter = RecipeResultAdapter(requireContext(), parentFragmentManager)
+        val recipeResultAdapter = RecipeResultAdapter(
+            requireContext(),
+            parentFragmentManager,
+            viewModel
+        )
 
         binding.recyclerView.adapter = recipeResultAdapter
 
         viewModel.slideInFromLeftAnimationTV(
                 binding.bottomTV,
-                view,
                 requireContext()
-            )
-
+        )
 
         val gif = ContextCompat.getDrawable(
             requireContext(),
             R.drawable.thai_gif
         ) as AnimatedImageDrawable
 
-        val completeConstraint = view?.findViewById<Constraints>(R.id.completeConstraint)
+        val completeConstraint = view.findViewById<Constraints>(R.id.completeConstraint)
 
         if (completeConstraint != null) {
             val gifImageView = ImageView(requireContext())
@@ -101,7 +102,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle text changes as needed
+                // Handle text changes
                 return true
             }
         })
