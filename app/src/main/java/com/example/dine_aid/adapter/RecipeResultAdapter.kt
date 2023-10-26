@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide
 import com.example.dine_aid.R
 import com.example.dine_aid.data.ModalBottomSheet
 import com.example.dine_aid.data.RecipeResult
-import com.example.dine_aid.model.MainViewModel
+import kotlinx.coroutines.delay
 
 class RecipeResultAdapter(val context: Context, val supportFragmentManager: FragmentManager,
 ) : RecyclerView.Adapter<RecipeResultAdapter.ItemViewHolder>() {
@@ -34,7 +34,9 @@ class RecipeResultAdapter(val context: Context, val supportFragmentManager: Frag
 
         val title = view.findViewById<TextView>(R.id.titleTV_item)
         val image = view.findViewById<ImageView>(R.id.imageIV_item)
-        val clickToSeeMoreTV = view.findViewById<TextView>(R.id.clickToSeeMoreTV)
+        val secondCardView = view.findViewById<CardView>(R.id.secondCardView)
+        val clickHereCarView = view.findViewById<CardView>(R.id.clickHereToSeeMoreCardView)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -51,34 +53,29 @@ class RecipeResultAdapter(val context: Context, val supportFragmentManager: Frag
         val recipeData = dataset[position]
 
         holder.title.text = recipeData.title
-
-//        val gif = ContextCompat.getDrawable(context, R.drawable.donuts_gif) as AnimatedImageDrawable
-
-    // Glide Funktions Notiz:
-    // -> Context / Der Bezug auf welches Fragment bzw. Ort sich die Funktion wenden soll.
-    // -> load / das Laden des Eigentlichen Hauptbildes.
-    // -> placeholder / Platzhalter ersatzbilf (falls er das Bild nicht laden kann).
-    // -> into / Den Platz auf den er das Bild laden soll.
-//        gif.start()
-//        Glide.with(context).load(recipeData.image)
-//            .placeholder(gif)
-//            .into(holder.image)
+        holder.secondCardView.visibility = View.GONE
 
         holder.image.load(recipeData.image) {
             crossfade(true)
             crossfade(2000)
             transformations(RoundedCornersTransformation(10f))
             error(R.drawable.broken_img)
+            listener { _, _ ->
+                holder.secondCardView.visibility = View.VISIBLE
+            }
         }
 
-        holder.clickToSeeMoreTV.visibility = View.GONE
+        holder.clickHereCarView.visibility = View.GONE
 
         holder.image.setOnClickListener {
-            holder.clickToSeeMoreTV.visibility = View.VISIBLE
-            holder.clickToSeeMoreTV.animation = AnimationUtils.loadAnimation(context,R.anim.slide_up_animation)
+            holder.clickHereCarView.visibility = View.VISIBLE
+            holder.clickHereCarView.animation =
+                AnimationUtils.loadAnimation(
+                    context,R.anim.slide_up_animation
+            )
         }
 
-        holder.clickToSeeMoreTV.setOnClickListener {
+        holder.clickHereCarView.setOnClickListener {
 
             val modalBottomSheet = ModalBottomSheet()
 
