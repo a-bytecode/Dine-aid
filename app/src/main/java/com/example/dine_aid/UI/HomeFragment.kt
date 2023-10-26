@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintSet.Constraint
 import androidx.constraintlayout.widget.Constraints
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.example.dine_aid.R
@@ -42,7 +43,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // TODO: Homefragment
 
-        val recipeResultAdapter = RecipeResultAdapter(requireContext())
+        val recipeResultAdapter = RecipeResultAdapter(requireContext(), parentFragmentManager)
 
         binding.recyclerView.adapter = recipeResultAdapter
 
