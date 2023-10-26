@@ -52,7 +52,7 @@ class RecipeResultAdapter(val context: Context, val supportFragmentManager: Frag
 
         holder.title.text = recipeData.title
 
-        val gif = ContextCompat.getDrawable(context, R.drawable.donuts_gif) as AnimatedImageDrawable
+//        val gif = ContextCompat.getDrawable(context, R.drawable.donuts_gif) as AnimatedImageDrawable
 
     // Glide Funktions Notiz:
     // -> Context / Der Bezug auf welches Fragment bzw. Ort sich die Funktion wenden soll.

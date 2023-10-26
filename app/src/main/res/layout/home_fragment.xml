@@ -60,9 +60,8 @@
 
         <TextView
             android:id="@+id/bottomTV"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif-smallcaps"
             android:text="All rights reserved for Dine Aid"
@@ -71,19 +70,8 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="70dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/bottomTV"
-            app:srcCompat="@drawable/ic_baseline_copyright_24"
-            app:tint="#FFFFFF" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

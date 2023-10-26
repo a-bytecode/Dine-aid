@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
@@ -46,6 +48,12 @@ class HomeFragment : Fragment() {
         val recipeResultAdapter = RecipeResultAdapter(requireContext(), parentFragmentManager)
 
         binding.recyclerView.adapter = recipeResultAdapter
+
+        viewModel.slideInFromLeftAnimationTV(
+                binding.bottomTV,
+                view,
+                requireContext()
+            )
 
 
         val gif = ContextCompat.getDrawable(
