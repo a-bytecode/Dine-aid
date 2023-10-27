@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.databinding.BottomSheetLayoutBinding
 import com.example.dine_aid.model.MainViewModel
 
@@ -36,7 +35,9 @@ class BottomSheetFragment : Fragment() {
 
         viewModel.repo.recipesID.observe(viewLifecycleOwner) { recipeID ->
             if (recipeID != null) {
-                viewModel.loadRecipeWidgetByID(recipeID)
+                bottomSheetAdapter.submitID(
+                    recipeID
+                )
             }
         }
     }

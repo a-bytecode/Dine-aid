@@ -25,9 +25,6 @@ class MainViewModel : ViewModel() {
 
     val repo = Repository(api)
 
-    private val _ingredients = MutableLiveData<List<String>>()
-    val ingredients: LiveData<List<String>> = _ingredients
-
     fun getRecipes(userInput : String) {
         try {
             viewModelScope.launch {
@@ -38,35 +35,17 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun loadRecipeWidgetByID(recipeID : Int) {
+    fun loadRecipeNutrionByID(recipeID : Int) {
         try {
             viewModelScope.launch {
-                val htmlCode = repo.loadRecipeWidget(recipeID)
-                val ingredientList = parseHtmlAndExtractIngredients(htmlCode)
-                _ingredients.value = ingredientList
+                repo.loadRecipeNutrionByID(recipeID)
             }
-        } catch (e: Exception) {
-            Log.d("Request RecipeWidget", "No Response at Recipe Widget $e")
+        } catch (e:Exception) {
+            Log.d("Request RecipeID", "No Response by this ID -> $recipeID / $e")
+
         }
     }
 
-    private fun parseHtmlAndExtractIngredients(htmlCode: String): List<String> {
-        val ingredients = mutableListOf<String>()
-        try {
-            val doc: Document = Jsoup.parse(htmlCode)
-            // Verwende CSS-Selektoren, um bestimmte Teile der HTML-Struktur auszuwählen
-            val elements = doc.select("CSS-Selektor") // Ersetze "CSS-Selektor" durch den richtigen Selektor
-
-            // Iteriere durch die ausgewählten HTML-Elemente und extrahiere die Daten
-            for (element in elements) {
-                // Füge die Daten zur Liste der Zutaten hinzu
-                ingredients.add(element.text())
-            }
-        } catch (e: Exception) {
-            // Fehlerbehandlung, falls beim Parsen ein Fehler auftritt
-        }
-        return ingredients
-    }
 
     fun useBottomSheet(supportFragmentManager:FragmentManager) {
 

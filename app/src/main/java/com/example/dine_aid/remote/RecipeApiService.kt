@@ -2,11 +2,12 @@ package com.example.dine_aid.remote
 
 import LoggingInterceptor
 import com.example.dine_aid.data.RecipeResponse
-import com.example.dine_aid.data.RecipeResult
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -50,8 +51,10 @@ interface RecipeApiService {
         @Query("imageSize") imageSize: String
     ) : RecipeResponse
 
-    @GET("recipes/{id}/ingredientWidget")
-    suspend fun loadRecipeWidget(@Path("id") recipeId: Int) : Int
+    @GET("recipes/{id}/nutritionWidget.png")
+    suspend fun loadRecipeNutrionByIDImage(
+        @Path("id") recipeId: Int
+    ) : Call<ResponseBody>
 
     object RecipeApi {
         val retrofitService: RecipeApiService by lazy { retrofit.create(RecipeApiService::class.java) }

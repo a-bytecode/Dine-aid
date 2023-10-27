@@ -57,31 +57,6 @@ class HomeFragment : Fragment() {
                 requireContext()
         )
 
-        val gif = ContextCompat.getDrawable(
-            requireContext(),
-            R.drawable.thai_gif
-        ) as AnimatedImageDrawable
-
-        val completeConstraint = view.findViewById<Constraints>(R.id.completeConstraint)
-
-        if (completeConstraint != null) {
-            val gifImageView = ImageView(requireContext())
-            gifImageView.setImageDrawable(gif)
-
-            val layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-            )
-            gifImageView.layoutParams = layoutParams
-
-            completeConstraint.background = gifImageView.drawable
-
-            Glide.with(requireContext())
-                .load(gif)
-                .placeholder(gif)
-                .into(gifImageView)
-        }
-
 
         val searchView = view.findViewById<SearchView>(R.id.searchView)
 

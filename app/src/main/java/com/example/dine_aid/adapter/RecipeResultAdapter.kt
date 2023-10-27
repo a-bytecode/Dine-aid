@@ -83,6 +83,7 @@ class RecipeResultAdapter(
 
         holder.clickHereCarView.setOnClickListener {
             viewModel.useBottomSheet(supportFragmentManager)
+            viewModel.loadRecipeNutrionByID(recipeData.id)
             Log.d("Receip by ID","Receip ID -> ${recipeData.id}")
         }
 

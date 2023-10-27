@@ -1,9 +1,12 @@
 package com.example.dine_aid.remote
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dine_aid.data.RecipeResponse
 import com.example.dine_aid.data.RecipeResult
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 
 class Repository (private val api : RecipeApiService.RecipeApi) {
@@ -24,10 +27,9 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
 
     }
 
-    suspend fun loadRecipeWidget(recipeID: Int): String {
-        // Hier rufst du die API auf und erhältst den HTML-Code
-        val htmlCode = api.retrofitService.loadRecipeWidget(recipeID)
-        return htmlCode.toString() // Gib den HTML-Code zurück
+    suspend fun loadRecipeNutrionByID(recipeID: Int): Call<ResponseBody> {
+
+        return api.retrofitService.loadRecipeNutrionByIDImage(recipeID)
     }
 
 }
