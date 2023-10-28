@@ -40,7 +40,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="SpeakableTextPresentCheck"
-                    tools:listitem="@layout/ingriedientswidget_item" />
+                    tools:listitem="@layout/recipeinformation_item" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </FrameLayout>

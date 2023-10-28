@@ -21,7 +21,7 @@ class BottomSheetAdapter : RecyclerView.Adapter<BottomSheetAdapter.ViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // Hier wird das Layout für die einzelnen Elemente in Ihrem Bottom Sheet festgelegt
         val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.ingriedientswidget_item,
+            R.layout.recipeinformation_item,
             parent,
             false
         )
