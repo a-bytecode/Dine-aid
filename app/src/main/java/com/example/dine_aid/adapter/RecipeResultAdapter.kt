@@ -1,7 +1,6 @@
 package com.example.dine_aid.adapter
 
 import android.content.Context
-import android.graphics.drawable.AnimatedImageDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +9,15 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
-import com.bumptech.glide.Glide
 import com.example.dine_aid.R
-import com.example.dine_aid.data.ModalBottomSheet
+import com.example.dine_aid.UI.HomeFragment
 import com.example.dine_aid.data.RecipeResult
-import com.example.dine_aid.databinding.HomeFragmentBinding
 import com.example.dine_aid.model.MainViewModel
-import kotlinx.coroutines.delay
 
 class RecipeResultAdapter(
     val context: Context,
@@ -83,8 +79,10 @@ class RecipeResultAdapter(
 
         holder.clickHereCarView.setOnClickListener {
             viewModel.useBottomSheet(supportFragmentManager)
-            viewModel.loadRecipeNutrionByID(recipeData.id)
-            Log.d("Receip by ID","Receip ID -> ${recipeData.id}")
+//            viewModel.loadRecipeNutrionByID(recipeData.id)
+            viewModel.loadRecipeInfo(recipeData.id)
+
+            Log.d("RecipeByID","RecipeID -> ${recipeData.id}")
         }
 
     }

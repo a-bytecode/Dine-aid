@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dine_aid.R
 import com.example.dine_aid.data.ModalBottomSheet
+import com.example.dine_aid.data.recipeInfo.RecipeInfo
 import com.example.dine_aid.remote.RecipeApiService
 import com.example.dine_aid.remote.Repository
 import com.google.android.gms.dynamic.SupportFragmentWrapper
@@ -35,16 +36,29 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun loadRecipeNutrionByID(recipeID : Int) {
+    fun loadRecipeInfo(recipeID: Int) {
         try {
             viewModelScope.launch {
-                repo.loadRecipeNutrionByID(recipeID)
+                repo.loadRecipeInfo(recipeID)
+                Log.d("vMRecipeID","vMRecipeID -> ${recipeID}")
+
             }
         } catch (e:Exception) {
-            Log.d("Request RecipeID", "No Response by this ID -> $recipeID / $e")
-
+            Log.d("Request Recipe Info",
+                "No Response by this ID -> ${recipeID}")
         }
     }
+
+//    fun loadRecipeNutrionByID(recipeID : Int) {
+//        try {
+//            viewModelScope.launch {
+//                repo.loadRecipeNutrionByID(recipeID)
+//            }
+//        } catch (e:Exception) {
+//            Log.d("Request RecipeID", "No Response by this ID -> $recipeID / $e")
+//
+//        }
+//    }
 
 
     fun useBottomSheet(supportFragmentManager:FragmentManager) {

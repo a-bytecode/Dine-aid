@@ -2,6 +2,7 @@ package com.example.dine_aid.UI
 
 import BottomSheetAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,11 +34,13 @@ class BottomSheetFragment : Fragment() {
 
         binding.ingridientswidgetRecycler.adapter = bottomSheetAdapter
 
-        viewModel.repo.recipesID.observe(viewLifecycleOwner) { recipeID ->
-            if (recipeID != null) {
-                bottomSheetAdapter.submitID(
-                    recipeID
-                )
+        viewModel.repo.recipeInfo.observe(viewLifecycleOwner) { recipeInfo ->
+
+            if (recipeInfo != null) {
+                bottomSheetAdapter.submitRecipeInfo(recipeInfo)
+            } else {
+                Log.d("recipeInfoIsNull","recipeInfo -> ${recipeInfo}")
+
             }
         }
     }

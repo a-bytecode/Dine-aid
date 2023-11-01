@@ -8,6 +8,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="14dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,10 +66,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:layout_editor_absoluteY="325dp">
+                    app:layout_constraintTop_toBottomOf="@+id/recipeInfo_cardView1_item">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -104,7 +106,7 @@
                                 android:id="@+id/instructionsTVInfo_item"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Butter-Bread is a <b>lacto ovo vegetarian</b> recipe with 6 servings. One serving contains <b>583 calories</b>, <b>12g of protein</b>, and <b>30g of fat</b>. For <b>78 cents per serving</b>, this recipe <b>covers 11%</b> of your daily requirements of vitamins and minerals. Head to the store and pick up liquid malt extract, yeast, butter, and a few other things to make it today. 3 people were impressed by this recipe. It is brought to you by Foodista. From preparation to the plate, this recipe takes roughly <b>1 hour and 30 minutes</b>. Overall, this recipe earns a <b>not so excellent spoonacular score of 35%</b>. If you like this recipe, you might also like recipes such as <a href=\&quot;https://spoonacular.com/recipes/peanut-butter-banana-bread-we-call-it-savannah-bread-865600\&quot;>Peanut Butter Banana Bread: We Call It Savannah Bread</a>, <a href=\&quot;https://spoonacular.com/recipes/chocolate-chunk-almond-butter-zucchini-bread-with-salted-maple-butter-1500505\&quot;>Chocolate Chunk Almond Butter Zucchini Bread with Salted Maple Butter</a>, and <a href=\&quot;https://spoonacular.com/recipes/bread-baking-apple-butter-swirl-bread-203814\&quot;>Bread Baking: Apple Butter Swirl Bread</a>." />
+                                android:text="placeholder Text" />
                         </TableRow>
 
                         <TableRow
@@ -162,7 +164,7 @@
                                 android:text=" I " />
 
                             <TextView
-                                android:id="@+id/minutes_IV_item"
+                                android:id="@+id/minutes_TV_item"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="120" />
