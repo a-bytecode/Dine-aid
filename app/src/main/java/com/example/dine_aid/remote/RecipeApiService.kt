@@ -1,6 +1,7 @@
 package com.example.dine_aid.remote
 
 import LoggingInterceptor
+import android.graphics.Bitmap
 import com.example.dine_aid.data.RecipeResponse
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
 import com.squareup.moshi.Moshi
@@ -26,7 +27,7 @@ private val client: OkHttpClient = OkHttpClient.Builder()
     .addInterceptor { chain ->
         val newRequest: Request = chain.request().newBuilder()
             .addHeader("x-api-key",
-                com.example.dine_aid.remote.API_TOKEN
+                API_TOKEN
             )
             .build()
         chain.proceed(newRequest)
@@ -52,10 +53,10 @@ interface RecipeApiService {
         @Query("imageSize") imageSize: String
     ) : RecipeResponse
 
-//    @GET("recipes/{id}/nutritionWidget.png")
-//    suspend fun loadRecipeNutrionByIDImage(
-//        @Path("id") recipeId: Int
-//    ) : Call<ResponseBody>
+    @GET("recipes/{id}/ingredientWidget.png")
+    suspend fun loadIngredientWidgetImage(
+        @Path("id") recipeId: Int
+    ): Bitmap
 
     @GET("recipes/{id}/information")
     suspend fun getRecipeInformation(

@@ -10,12 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.dine_aid.R
-import com.example.dine_aid.UI.HomeFragment
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.model.MainViewModel
 
@@ -79,9 +77,8 @@ class RecipeResultAdapter(
 
         holder.clickHereCarView.setOnClickListener {
             viewModel.useBottomSheet(supportFragmentManager)
-//            viewModel.loadRecipeNutrionByID(recipeData.id)
             viewModel.loadRecipeInfo(recipeData.id)
-
+            viewModel.loadRecipeNutrionByID(recipeData.id)
             Log.d("RecipeByID","RecipeID -> ${recipeData.id}")
         }
 

@@ -1,3 +1,4 @@
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -6,10 +7,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bumptech.glide.Glide
 import com.example.dine_aid.R
+import com.example.dine_aid.data.IngredientWidgetUrl
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
+import com.example.dine_aid.model.MainViewModel
+import com.example.dine_aid.remote.Repository
 
-class BottomSheetAdapter : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolder>() {
+class BottomSheetAdapter(
+    val repo : Repository,
+    val context: Context
+    ) : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolder>() {
 
     var dataset : RecipeInfo? = null
 
@@ -26,6 +34,7 @@ class BottomSheetAdapter : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolde
         val minutes_TV_Item = view.findViewById<TextView>(R.id.minutes_TV_item)
         val servingsNumberTVitem = view.findViewById<TextView>(R.id.servingsNumber_item)
         val instructionsTV = view.findViewById<TextView>(R.id.instructionsTVInfo_item)
+        val ingriedientsWidgetIV = view.findViewById<ImageView>(R.id.ingriedientsWidgetIV)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -49,13 +58,17 @@ class BottomSheetAdapter : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolde
             }
             holder.minutes_TV_Item.text = recipeInfoData.readyInMinutes.toString()
             holder.servingsNumberTVitem.text = recipeInfoData.servings.toString()
-            Log.d("servingNumber", "serving numner ${recipeInfoData.servings}")
             holder.instructionsTV.text = recipeInfoData.instructions
-            Log.d("instructionsTV", "instructionsTV ${recipeInfoData.instructions}")
         } else {
             Log.d("recipeInfoData", "recipeInfoData is null ${recipeInfoData}")
-
         }
+
+        val url = repo.ingredientWidgetImage.value
+
+        Log.d("IsImageLoadoed", "loaded Image URL ${url}")
+
+
+        Glide.with(context).load(url!!).placeholder(R.drawable.broken_img).into(holder.ingriedientsWidgetIV)
 
     }
 

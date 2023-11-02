@@ -1,5 +1,6 @@
 package com.example.dine_aid.remote
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +20,11 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
     private val _recipeID = MutableLiveData<Int>()
     val recipesID : LiveData<Int> = _recipeID
 
+    private val _ingredientWidgetImage = MutableLiveData<String>()
+    val ingredientWidgetImage: LiveData<String> = _ingredientWidgetImage
+
+
+
     private val _recipeInfo = MutableLiveData<RecipeInfo>()
     val recipeInfo : LiveData<RecipeInfo> = _recipeInfo
 
@@ -30,10 +36,15 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
 
     }
 
-//    suspend fun loadRecipeNutrionByID(recipeID: Int): Call<ResponseBody> {
-//
-//        return api.retrofitService.loadRecipeNutrionByIDImage(recipeID)
-//    }
+    fun loadRecipeNutrionByID(recipeID: Int) : String {
+
+        val url = "https://api.spoonacular.com/recipes/${recipeID}/nutritionWidget.png"
+
+        _ingredientWidgetImage.postValue(url)
+
+        return url
+
+    }
 
     suspend fun loadRecipeInfo(recipeID: Int) {
 
