@@ -62,7 +62,6 @@ class HomeFragment : Fragment() {
 
         viewModel.repo.recipes.observe(viewLifecycleOwner) { recipes ->
             recipeResultAdapter.submitList(recipes)
-            Log.d("Check Recipe ID", "RecipeID -> ${recipes[0].id}")
         }
 
 

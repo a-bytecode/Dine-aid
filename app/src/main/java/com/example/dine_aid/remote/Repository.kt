@@ -1,15 +1,12 @@
 package com.example.dine_aid.remote
 
-import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dine_aid.BuildConfig
 import com.example.dine_aid.data.RecipeResponse
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
 
 class Repository (private val api : RecipeApiService.RecipeApi) {
 
@@ -36,14 +33,15 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
 
     }
 
-    fun loadRecipeNutrionByID(recipeID: Int) : String {
+    fun loadRecipeNutritionByID(recipeID: Int) : String {
 
-        val url = "https://api.spoonacular.com/recipes/${recipeID}/nutritionWidget.png"
+        val secretApiKey = BuildConfig.API_TOKEN
+
+        val url = "https://api.spoonacular.com/recipes/$recipeID/nutritionWidget.png?apiKey=$secretApiKey"
 
         _ingredientWidgetImage.postValue(url)
 
         return url
-
     }
 
     suspend fun loadRecipeInfo(recipeID: Int) {
@@ -53,7 +51,6 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
 
         _recipeInfo.value = responseRecipeInfo
         Log.d("_recipeInfo","_recipeInfo -> ${responseRecipeInfo.title}")
-
 
     }
 

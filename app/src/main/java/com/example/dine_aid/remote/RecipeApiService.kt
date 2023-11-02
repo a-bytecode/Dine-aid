@@ -1,7 +1,6 @@
 package com.example.dine_aid.remote
 
 import LoggingInterceptor
-import android.graphics.Bitmap
 import com.example.dine_aid.data.RecipeResponse
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
 import com.squareup.moshi.Moshi
@@ -9,7 +8,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -38,6 +36,7 @@ val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
+val recipeAdapter = moshi.adapter(RecipeInfo::class.java).lenient()
 
 private val retrofit = Retrofit.Builder()
     .client(client)
@@ -53,10 +52,10 @@ interface RecipeApiService {
         @Query("imageSize") imageSize: String
     ) : RecipeResponse
 
-    @GET("recipes/{id}/ingredientWidget.png")
-    suspend fun loadIngredientWidgetImage(
+    @GET("recipes/{id}/nutritionWidget.png")
+    suspend fun loadNutritionWidget(
         @Path("id") recipeId: Int
-    ): Bitmap
+    ): Response<String>
 
     @GET("recipes/{id}/information")
     suspend fun getRecipeInformation(

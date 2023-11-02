@@ -45,7 +45,7 @@ class MainViewModel : ViewModel() {
     fun loadRecipeNutrionByID(recipeID : Int) {
         try {
             viewModelScope.launch {
-                repo.loadRecipeNutrionByID(recipeID)
+                repo.loadRecipeNutritionByID(recipeID)
             }
         } catch (e:Exception) {
             Log.d("Request RecipeID", "No Response by this ID -> $recipeID")
