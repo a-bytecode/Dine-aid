@@ -15,6 +15,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dine_aid"
         tools:targetApi="34">
+
+        <activity
+            android:name="com.example.dine_aid.FullScreenImageActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -28,6 +39,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

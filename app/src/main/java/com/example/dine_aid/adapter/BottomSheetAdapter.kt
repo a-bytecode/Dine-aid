@@ -1,4 +1,5 @@
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.AnimatedImageDrawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -6,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
+import com.example.dine_aid.FullScreenImageActivity
 import com.example.dine_aid.R
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
 import com.example.dine_aid.remote.Repository
@@ -65,7 +68,7 @@ class BottomSheetAdapter(
 
         val gif = ContextCompat
             .getDrawable(
-                context, R.drawable._04brain
+                context, R.drawable._04error
             ) as AnimatedImageDrawable
         Log.d("IsImageLoaded", "loaded Image URL ${url}")
 
@@ -78,6 +81,29 @@ class BottomSheetAdapter(
                 .into(holder.ingriedientsWidgetIV)
 
         }
+
+        holder.ingriedientsWidgetIV.setOnClickListener {
+            openFullScreenImage()
+        }
+    }
+
+    private fun openFullScreenImage() {
+        val fullScreenIntent = Intent(context, FullScreenImageActivity::class.java)
+
+        val imageURL = repo.nutritionWidgetImage.value
+
+        if (imageURL != null) {
+            fullScreenIntent.putExtra("image_url", imageURL)
+            context.startActivity(fullScreenIntent)
+        } else {
+            Toast.makeText(context,
+                "Bild-URL nicht verfügbar",
+                Toast.LENGTH_SHORT)
+                .show()
+
+        }
+
+
     }
 
     override fun getItemCount(): Int {
