@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
 import com.example.dine_aid.R
-import com.example.dine_aid.data.IngredientWidgetUrl
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
-import com.example.dine_aid.model.MainViewModel
 import com.example.dine_aid.remote.Repository
 
 class BottomSheetAdapter(
@@ -27,7 +25,6 @@ class BottomSheetAdapter(
         dataset = recipeInfo
         notifyDataSetChanged()
     }
-
 
     class ItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
@@ -53,8 +50,6 @@ class BottomSheetAdapter(
 
         if (recipeInfoData != null) {
             holder.tv_title_item.text = recipeInfoData.title
-            Log.d("tv_title_item", "tv_title_item ${recipeInfoData.title}")
-
             holder.recipeImageView.load(recipeInfoData.image) {
                 error(R.drawable.broken_img)
             }
@@ -62,22 +57,27 @@ class BottomSheetAdapter(
             holder.servingsNumberTVitem.text = recipeInfoData.servings.toString()
             holder.instructionsTV.text = recipeInfoData.instructions
         } else {
-            Log.d("recipeInfoData", "recipeInfoData is null ${recipeInfoData}")
+            Log.d("recipeInfoData",
+                  "recipeInfoData is null ${recipeInfoData}")
         }
 
-        val url = repo.ingredientWidgetImage.value
+        val url = repo.nutritionWidgetImage.value
 
-        val gif = ContextCompat.getDrawable(context, R.drawable._04brain) as AnimatedImageDrawable
-
-        Log.d("IsImageLoadoed", "loaded Image URL ${url}")
+        val gif = ContextCompat
+            .getDrawable(
+                context, R.drawable._04brain
+            ) as AnimatedImageDrawable
+        Log.d("IsImageLoaded", "loaded Image URL ${url}")
 
         if (url != null) {
             gif.start()
-            Glide.with(context).load(url).placeholder(gif).into(holder.ingriedientsWidgetIV)
-        } else {
-            holder.ingriedientsWidgetIV.setImageResource(R.drawable.cook_image)
-        }
+            Glide
+                .with(context)
+                .load(url)
+                .placeholder(gif)
+                .into(holder.ingriedientsWidgetIV)
 
+        }
     }
 
     override fun getItemCount(): Int {

@@ -25,5 +25,5 @@ class RecipeInfo (
     val title: String,
 
     @Json(name = "instructions")
-    val instructions: String
+    var instructions: String
         )

@@ -36,8 +36,6 @@ val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-val recipeAdapter = moshi.adapter(RecipeInfo::class.java).lenient()
-
 private val retrofit = Retrofit.Builder()
     .client(client)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -52,15 +50,10 @@ interface RecipeApiService {
         @Query("imageSize") imageSize: String
     ) : RecipeResponse
 
-    @GET("recipes/{id}/nutritionWidget.png")
-    suspend fun loadNutritionWidget(
-        @Path("id") recipeId: Int
-    ): Response<String>
-
     @GET("recipes/{id}/information")
     suspend fun getRecipeInformation(
         @Path("id") recipeId: Int
-    ): RecipeInfo  // Annahme, dass die Antwort in einem RecipeInfo-Objekt verpackt ist
+    ): RecipeInfo
 
     object RecipeApi {
         val retrofitService: RecipeApiService by lazy { retrofit.create(RecipeApiService::class.java) }

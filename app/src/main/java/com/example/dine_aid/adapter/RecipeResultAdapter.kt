@@ -1,7 +1,6 @@
 package com.example.dine_aid.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,10 +77,8 @@ class RecipeResultAdapter(
         holder.clickHereCarView.setOnClickListener {
             viewModel.useBottomSheet(supportFragmentManager)
             viewModel.loadRecipeInfo(recipeData.id)
-            viewModel.loadRecipeNutrionByID(recipeData.id)
-            Log.d("RecipeByID","RecipeID -> ${recipeData.id}")
+            viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
         }
-
     }
 
     override fun getItemCount(): Int {

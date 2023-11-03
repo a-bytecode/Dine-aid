@@ -42,18 +42,6 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun loadRecipeNutrionByID(recipeID : Int) {
-        try {
-            viewModelScope.launch {
-                repo.loadRecipeNutritionByID(recipeID)
-            }
-        } catch (e:Exception) {
-            Log.d("Request RecipeID", "No Response by this ID -> $recipeID")
-
-        }
-    }
-
-
     fun useBottomSheet(supportFragmentManager:FragmentManager) {
 
         val modelBottomSheet = ModalBottomSheet()

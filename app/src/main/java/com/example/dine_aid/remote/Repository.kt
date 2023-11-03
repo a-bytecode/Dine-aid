@@ -10,17 +10,11 @@ import com.example.dine_aid.data.recipeInfo.RecipeInfo
 
 class Repository (private val api : RecipeApiService.RecipeApi) {
 
-
     private val _recipes = MutableLiveData<List<RecipeResult>>()
     val recipes : LiveData<List<RecipeResult>> = _recipes
 
-    private val _recipeID = MutableLiveData<Int>()
-    val recipesID : LiveData<Int> = _recipeID
-
-    private val _ingredientWidgetImage = MutableLiveData<String>()
-    val ingredientWidgetImage: LiveData<String> = _ingredientWidgetImage
-
-
+    private val _nutritionWidgetImage = MutableLiveData<String>()
+    val nutritionWidgetImage: LiveData<String> = _nutritionWidgetImage
 
     private val _recipeInfo = MutableLiveData<RecipeInfo>()
     val recipeInfo : LiveData<RecipeInfo> = _recipeInfo
@@ -33,25 +27,35 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
 
     }
 
-    fun loadRecipeNutritionByID(recipeID: Int) : String {
-
-        val secretApiKey = BuildConfig.API_TOKEN
-
-        val url = "https://api.spoonacular.com/recipes/$recipeID/nutritionWidget.png?apiKey=$secretApiKey"
-
-        _ingredientWidgetImage.postValue(url)
-
-        return url
-    }
-
     suspend fun loadRecipeInfo(recipeID: Int) {
 
         val responseRecipeInfo = api.retrofitService.getRecipeInformation(recipeID)
-        Log.d("responseRecipeInfo","responseRecipeInfo ${recipeID}")
+
+        if (responseRecipeInfo.instructions.contains("<ol><li>")) {
+            val cleanedInstructions = removeHtmlTags(responseRecipeInfo.instructions)
+
+            responseRecipeInfo.instructions = cleanedInstructions
+        }
 
         _recipeInfo.value = responseRecipeInfo
-        Log.d("_recipeInfo","_recipeInfo -> ${responseRecipeInfo.title}")
 
+    }
+
+    fun loadRecipeNutritionWidgetByID(recipeID: Int) {
+
+        val secretApiKey = BuildConfig.API_TOKEN
+
+        val url=
+            "https://api.spoonacular.com/recipes/$recipeID/nutritionWidget.png?apiKey=$secretApiKey"
+
+        _nutritionWidgetImage.postValue(url)
+
+    }
+
+    fun removeHtmlTags(input: String): String {
+        // Hier werden HTML Tags der API enfernt
+        val regex = Regex("<[^>]+>|&[a-zA-Z0-9]+;")
+        return input.replace(regex, "")
     }
 
 }
