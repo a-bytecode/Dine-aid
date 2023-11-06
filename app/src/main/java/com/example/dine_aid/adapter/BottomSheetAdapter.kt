@@ -103,7 +103,6 @@ class BottomSheetAdapter(
 
         }
 
-
     }
 
     override fun getItemCount(): Int {
