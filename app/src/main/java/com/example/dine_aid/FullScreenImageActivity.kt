@@ -72,7 +72,7 @@ class FullScreenImageActivity : AppCompatActivity() {
 
     inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            // Hier setzt du den Zoomfaktor auf den Ausgangszustand zurück
+
             scaleFactor = 1.0f
             imageView.scaleX = scaleFactor
             imageView.scaleY = scaleFactor
