@@ -19,7 +19,7 @@ import com.example.dine_aid.remote.Repository
 
 class BottomSheetAdapter(
     val repo : Repository,
-    val context: Context
+    val context: Context,
     ) : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolder>() {
 
     var dataset : RecipeInfo? = null
@@ -102,12 +102,10 @@ class BottomSheetAdapter(
                 .show()
 
         }
-
     }
 
     override fun getItemCount(): Int {
 
         return if (dataset != null) return 1 else 0
     }
-
 }

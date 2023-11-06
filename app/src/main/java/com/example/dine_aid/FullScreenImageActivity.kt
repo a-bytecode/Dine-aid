@@ -13,8 +13,11 @@ class FullScreenImageActivity : AppCompatActivity() {
 
     private lateinit var imageView: ImageView
     private lateinit var scaleGestureDetector: ScaleGestureDetector
+    private lateinit var gestureDetector: GestureDetector
 
     private var scaleFactor = 1.0f
+    private var previousX = 0.0f
+    private var previousY = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,14 +29,34 @@ class FullScreenImageActivity : AppCompatActivity() {
         if (imageUrl != null) {
 
             Glide.with(this).load(imageUrl).into(imageView)
+
         }
 
         scaleGestureDetector = ScaleGestureDetector(this, MyScaleGestureListener())
+        gestureDetector = GestureDetector(this,MyGestureListener())
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         scaleGestureDetector.onTouchEvent(event)
-        return super.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event)
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                previousX = event.x
+                previousY = event.y
+            }
+            MotionEvent.ACTION_MOVE -> {
+                val deltaX = event.x - previousX
+                val deltaY = event.y - previousY
+
+                imageView.translationX += deltaX
+                imageView.translationY += deltaY
+
+                previousX = event.x
+                previousY = event.y
+            }
+        }
+        return true
     }
 
     inner class MyScaleGestureListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -43,6 +66,18 @@ class FullScreenImageActivity : AppCompatActivity() {
 
             imageView.scaleX = scaleFactor
             imageView.scaleY = scaleFactor
+            return true
+        }
+    }
+
+    inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            // Hier setzt du den Zoomfaktor auf den Ausgangszustand zurück
+            scaleFactor = 1.0f
+            imageView.scaleX = scaleFactor
+            imageView.scaleY = scaleFactor
+            imageView.translationX = 0f
+            imageView.translationY = 0f
             return true
         }
     }

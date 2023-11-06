@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.example.dine_aid.R
 import com.example.dine_aid.databinding.BottomSheetLayoutBinding
 import com.example.dine_aid.model.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
