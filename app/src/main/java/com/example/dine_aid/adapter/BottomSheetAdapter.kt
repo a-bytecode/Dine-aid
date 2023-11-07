@@ -5,9 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -37,6 +40,10 @@ class BottomSheetAdapter(
         val servingsNumberTVitem = view.findViewById<TextView>(R.id.servingsNumber_item)
         val instructionsTV = view.findViewById<TextView>(R.id.instructionsTVInfo_item)
         val ingriedientsWidgetIV = view.findViewById<ImageView>(R.id.ingriedientsWidgetIV)
+        val recipeInfoCardView1 = view.findViewById<CardView>(R.id.recipeInfo_cardView1_item)
+        val recipeInfoCardView2 = view.findViewById<CardView>(R.id.recipeInfo_cardView2_item)
+        val nutritionStatisticsCardView = view.findViewById<CardView>(R.id.nutrionInfo_cardView1_item)
+        val okbtng = view.findViewById<Button>(R.id.okbtng_item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -56,9 +63,7 @@ class BottomSheetAdapter(
             holder.recipeImageView.load(recipeInfoData.image) {
                 error(R.drawable.broken_img)
             }
-            holder.minutes_TV_Item.text = recipeInfoData.readyInMinutes.toString()
-            holder.servingsNumberTVitem.text = recipeInfoData.servings.toString()
-            holder.instructionsTV.text = recipeInfoData.instructions
+
         } else {
             Log.d("recipeInfoData",
                   "recipeInfoData is null ${recipeInfoData}")
@@ -82,6 +87,51 @@ class BottomSheetAdapter(
 
         }
 
+        holder.recipeInfoCardView1.setOnClickListener {
+            holder.recipeInfoCardView2.visibility = View.VISIBLE
+            holder.recipeInfoCardView2.animation = AnimationUtils
+                .loadAnimation(
+                    context,R.anim.slide_up_animation
+                )
+            holder.okbtng.setOnClickListener {
+                holder.recipeInfoCardView2.animation = AnimationUtils
+                    .loadAnimation(
+                        context,R.anim.slide_down_animation
+                    )
+                holder.recipeInfoCardView2.visibility = View.GONE
+            }
+            if (recipeInfoData != null) {
+                holder.minutes_TV_Item.text = recipeInfoData.readyInMinutes.toString()
+                holder.servingsNumberTVitem.text = recipeInfoData.servings.toString()
+                holder.instructionsTV.text = recipeInfoData.instructions
+            }
+            else {
+                Log.d("recipeInfoData",
+                    "recipeInfoData is null ${recipeInfoData}")
+            }
+        }
+
+
+        var countCardView = 0
+        holder.nutritionStatisticsCardView.setOnClickListener {
+
+             countCardView ++
+
+                holder.ingriedientsWidgetIV.visibility = View.VISIBLE
+                holder.ingriedientsWidgetIV.animation = AnimationUtils.
+                loadAnimation(
+                    context,R.anim.slide_up_animation
+                )
+            if (countCardView == 2) {
+                holder.ingriedientsWidgetIV.visibility = View.GONE
+                holder.ingriedientsWidgetIV.animation = AnimationUtils.
+                loadAnimation(
+                    context,R.anim.slide_down_animation
+                )
+                countCardView = 0
+            }
+
+        }
         holder.ingriedientsWidgetIV.setOnClickListener {
             openFullScreenImage()
         }

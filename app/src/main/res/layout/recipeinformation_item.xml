@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:foregroundTint="#3ACC19">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -26,6 +27,35 @@
                 android:layout_height="match_parent"
                 android:background="#00FFFFFF">
 
+                <TextView
+                    android:id="@+id/tv_title_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="#2E7D32"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:text="Breaking Bread"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/recipeIV_item"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_item"
+                    app:shapeAppearanceOverlay="@style/RoundedImageView"
+                    tools:srcCompat="@tools:sample/avatars" />
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/nutrionInfo_cardView1_item"
                     android:layout_width="match_parent"
@@ -33,15 +63,16 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    app:cardCornerRadius="10dp"
+                    android:background="#2E7D32"
                     app:cardElevation="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeInfo_cardView2_item">
+                    app:layout_constraintTop_toBottomOf="@+id/recipeInfo_cardView1_item">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="#2E7D32">
 
                         <TextView
                             android:id="@+id/nutrionInfoTV_item"
@@ -51,7 +82,7 @@
                             android:layout_marginBottom="16dp"
                             android:text="Nutrion Statistics"
                             android:textAlignment="center"
-                            android:textColor="#000000"
+                            android:textColor="#F8F8F8"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -63,82 +94,36 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/recipeInfo_cardView2_item"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeInfo_cardView1_item">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <TableRow
-                            android:id="@+id/TableRow3"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="16dp"
+                        <Button
+                            android:id="@+id/okbtng_item"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="OK"
+                            android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/TableRow2">
-
-                            <TextView
-                                android:id="@+id/instructionsTV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Instructions" />
-
-                            <TextView
-                                android:id="@+id/devider_instructionsTV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" I " />
-
-                            <TextView
-                                android:id="@+id/instructionsTVInfo_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="placeholder Text" />
-                        </TableRow>
-
-                        <TableRow
-                            android:id="@+id/TableRow2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="16dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/TableRow1">
-
-                            <TextView
-                                android:id="@+id/servingsTV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Servings" />
-
-                            <TextView
-                                android:id="@+id/devider_servingsTV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" I " />
-
-                            <TextView
-                                android:id="@+id/servingsNumber_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="6" />
-                        </TableRow>
+                            app:layout_constraintTop_toBottomOf="@+id/TableRow3" />
 
                         <TableRow
                             android:id="@+id/TableRow1"
@@ -151,31 +136,156 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/readyInMinutesTV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Quickness" />
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
 
-                            <TextView
-                                android:id="@+id/devider_minutes_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" I " />
+                                <ImageView
+                                    android:id="@+id/imageView"
+                                    android:layout_width="60dp"
+                                    android:layout_height="100dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_baseline_timelapse_24" />
 
-                            <TextView
-                                android:id="@+id/minutes_TV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="120" />
+                                <TextView
+                                    android:id="@+id/minTV_item"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-smallcaps"
+                                    android:text=" minutes"
+                                    android:textColor="#000000"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/minutes_TV_item"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:id="@+id/minTV_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" minutes" />
+                                <TextView
+                                    android:id="@+id/minutes_TV_item"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-smallcaps"
+                                    android:text="120"
+                                    android:textColor="#000000"
+                                    android:textSize="40sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:id="@+id/imageView2"
+                                    android:layout_width="60dp"
+                                    android:layout_height="100dp"
+                                    android:layout_marginStart="8dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/minTV_item"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_baseline_groups_24" />
+
+                                <TextView
+                                    android:id="@+id/servingsNumber_item"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:fontFamily="sans-serif-smallcaps"
+                                    android:text="6"
+                                    android:textColor="#000000"
+                                    android:textSize="40sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/servingsTV_item"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:fontFamily="sans-serif-smallcaps"
+                                    android:text="servings"
+                                    android:textColor="#000000"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/servingsNumber_item"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
                         </TableRow>
+
+                        <TableRow
+                            android:id="@+id/TableRow3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/TableRow1">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ScrollView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginEnd="16dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <ImageView
+                                                android:id="@+id/imageView5"
+                                                android:layout_width="80dp"
+                                                android:layout_height="100dp"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:srcCompat="@drawable/ic_baseline_food_bank_24" />
+
+                                            <TextView
+                                                android:id="@+id/instructionsTV_item"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="sans-serif-smallcaps"
+                                                android:text="Instructions"
+                                                android:textColor="#000000"
+                                                android:textSize="40sp"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+                                            <TextView
+                                                android:id="@+id/instructionsTVInfo_item"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="16dp"
+                                                android:layout_marginBottom="16dp"
+                                                android:fontFamily="sans-serif"
+                                                android:text="placeholder Text"
+                                                android:textColor="#000000"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toBottomOf="@+id/instructionsTV_item" />
+
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                    </LinearLayout>
+                                </ScrollView>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </TableRow>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -187,79 +297,64 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    app:cardCornerRadius="10dp"
                     app:cardElevation="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/headerCardView_item">
+                    app:layout_constraintTop_toBottomOf="@+id/recipeIV_item">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="#2E7D32">
 
-                        <TextView
-                            android:id="@+id/recipeInfoTV_item"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginBottom="16dp"
-                            android:text="Recipe Informations"
-                            android:textAlignment="center"
-                            android:textColor="#000000"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/recipeInfoTV_item"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="80dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:text="Recipe Informations"
+                                    android:textAlignment="center"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:id="@+id/imageView4"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginBottom="10dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/recipeInfoTV_item"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_baseline_info_24"
+                                    app:tint="#FFFFFF" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </LinearLayout>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/headerCardView_item"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_title_item"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:background="#2E7D32"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="10dp"
-                            android:text="Breaking Bread"
-                            android:textColor="#FFFFFF"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ImageView
-                            android:id="@+id/recipeIV_item"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_title_item"
-                            tools:srcCompat="@tools:sample/avatars" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
                 </androidx.cardview.widget.CardView>
 
                 <ImageView
@@ -267,10 +362,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:scaleType="fitCenter"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
