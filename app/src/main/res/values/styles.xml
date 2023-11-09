@@ -4,5 +4,12 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">15dp</item>
     </style>
-</resources>
 
+    <style name="ThemeOverlay.SearchView" parent="">
+    <!-- Text color -->
+    <item name="android:editTextColor">@color/black</item>
+    <!-- Hint text color -->
+    <item name="android:textColorHint">@color/black</item>
+    </style>
+
+</resources>

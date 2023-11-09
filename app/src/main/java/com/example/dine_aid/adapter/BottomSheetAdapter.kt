@@ -5,24 +5,35 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
 import com.example.dine_aid.FullScreenImageActivity
 import com.example.dine_aid.R
 import com.example.dine_aid.data.recipeInfo.RecipeInfo
+import com.example.dine_aid.model.MainViewModel
 import com.example.dine_aid.remote.Repository
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetAdapter(
     val repo : Repository,
     val context: Context,
+    val viewModel: MainViewModel,
+    val supportFragmentManager: FragmentManager
     ) : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolder>() {
 
     var dataset : RecipeInfo? = null
@@ -43,7 +54,10 @@ class BottomSheetAdapter(
         val recipeInfoCardView1 = view.findViewById<CardView>(R.id.recipeInfo_cardView1_item)
         val recipeInfoCardView2 = view.findViewById<CardView>(R.id.recipeInfo_cardView2_item)
         val nutritionStatisticsCardView = view.findViewById<CardView>(R.id.nutrionInfo_cardView1_item)
+        val closeSheetIV = view.findViewById<ImageView>(R.id.closeSheetIV)
         val okbtng = view.findViewById<Button>(R.id.okbtng_item)
+
+        val rootView = view
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -111,6 +125,10 @@ class BottomSheetAdapter(
             }
         }
 
+        holder.closeSheetIV.setOnClickListener {
+            viewModel.closeBottomSheet(supportFragmentManager)
+            viewModel.hideKeyboard(context,holder.rootView)
+        }
 
         var countCardView = 0
         holder.nutritionStatisticsCardView.setOnClickListener {

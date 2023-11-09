@@ -53,7 +53,7 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
     }
 
     fun removeHtmlTags(input: String): String {
-        // Hier werden HTML Tags der API enfernt
+        // Hier werden HTML Tags des TextView Requests entfernt
         val regex = Regex("<[^>]+>|&[a-zA-Z0-9]+;")
         return input.replace(regex, "")
     }

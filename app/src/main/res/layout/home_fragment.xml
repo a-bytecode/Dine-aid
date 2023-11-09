@@ -23,9 +23,13 @@
             android:background="@drawable/stroke_image"
             android:backgroundTint="#FFFFFF"
             android:elevation="10dp"
+            android:theme="@style/ThemeOverlay.SearchView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/headerTV" />
+            app:layout_constraintTop_toBottomOf="@+id/headerTV"
+            app:searchHintIcon="@drawable/ic_baseline_search_24"
+            app:searchIcon="@drawable/ic_baseline_search_24"
+            app:voiceIcon="@drawable/ic_baseline_keyboard_voice_24" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

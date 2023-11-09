@@ -1,5 +1,6 @@
 package com.example.dine_aid.UI
 
+import android.content.Context
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -71,6 +73,15 @@ class HomeFragment : Fragment() {
                 if (!query.isNullOrBlank()) {
                     viewModel.getRecipes(query)
                     Log.d("QueryTextTest", "Text -> ${query}")
+
+                    val inputMethodManager =
+                        context?.getSystemService(
+                            Context.INPUT_METHOD_SERVICE
+                        ) as InputMethodManager?
+                    inputMethodManager?.hideSoftInputFromWindow(searchView.windowToken, 0)
+
+                    binding.headerMain.requestFocus()
+
                 }
 
                 return true
