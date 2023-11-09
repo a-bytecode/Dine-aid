@@ -1,4 +1,8 @@
 package com.example.dine_aid.UI.login
 
-class Login_Fragment {
+import androidx.fragment.app.Fragment
+
+class Login_Fragment : Fragment() {
+
+
 }

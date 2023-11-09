@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "474794867564",
-    "project_id": "dine-aid",
-    "storage_bucket": "dine-aid.appspot.com"
+    "project_number": "547072845427",
+    "project_id": "dineaid",
+    "storage_bucket": "dineaid.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:474794867564:android:5a67091fc1574289a89149",
+        "mobilesdk_app_id": "1:547072845427:android:2a282dd493ec3a8e476c06",
         "android_client_info": {
           "package_name": "com.example.dine_aid"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBI8_J_QGMkJNTeETcfOMvesOImMoxdUEk"
+          "current_key": "AIzaSyD0MhJtGyk0530XX0MXVfjzOQZftqczNMQ"
         }
       ],
       "services": {
