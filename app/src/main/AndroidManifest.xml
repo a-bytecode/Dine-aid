@@ -27,7 +27,7 @@
 
 
         <activity
-            android:name=".MainActivity"
+            android:name=".UI.login.Login_Fragment"
             android:windowSoftInputMode="stateHidden"
             android:exported="true">
             <intent-filter>

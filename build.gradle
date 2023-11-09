@@ -4,14 +4,21 @@ buildscript {
     ext {
         nav_version = "2.5.3"
     }
-    dependencies {
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
-    }
-}
 
-plugins {
-    id 'com.android.application' version '7.3.1' apply false
-    id 'com.android.library' version '7.3.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
-    id("com.google.gms.google-services") version "4.4.0" apply false
-}
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+            classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
+        }
+    }
+
+    plugins {
+        id 'com.android.application' version '7.3.1' apply false
+        id 'com.android.library' version '7.3.1' apply false
+        id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+        id("com.google.gms.google-services") version "4.4.0" apply false
+    }
