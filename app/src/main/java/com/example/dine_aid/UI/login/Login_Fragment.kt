@@ -22,18 +22,18 @@ class Login_Fragment : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (FirebaseApp.getApps(this).isEmpty()) {
-            FirebaseApp.initializeApp(this)
-        }
+        FirebaseApp.initializeApp(this)
 
         binding = LoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        firebaseViewModel = ViewModelProvider(this)
+            .get(
+                FirebaseViewModel::class.java
+            )
 
-        firebaseViewModel.currentUser.observe(this) { currentUser ->
-            if (currentUser == null) {
+        firebaseViewModel.currentUser.observe(this) {
+            if (it == null) {
                 findNavController(
                     androidx.navigation.fragment.
                     R.id.nav_host_fragment_container
