@@ -9,6 +9,7 @@ import com.example.dine_aid.databinding.LoginScreenBinding
 import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 
 class Login_Fragment : AppCompatActivity() {
 
@@ -22,9 +23,8 @@ class Login_Fragment : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this)
-
         binding = LoginScreenBinding.inflate(layoutInflater)
+//        FirebaseApp.initializeApp(this)
         setContentView(binding.root)
 
         firebaseViewModel = ViewModelProvider(this)
