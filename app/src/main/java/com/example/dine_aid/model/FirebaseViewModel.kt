@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseUser
 
 class FirebaseViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     private val _currentUser = MutableLiveData<FirebaseUser?>(firebaseAuth.currentUser)
     val currentUser : LiveData<FirebaseUser?>

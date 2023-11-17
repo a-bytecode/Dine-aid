@@ -1,6 +1,9 @@
 package com.example.dine_aid.UI.login
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -23,24 +26,15 @@ class Login_Fragment : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
+
         binding = LoginScreenBinding.inflate(layoutInflater)
-//        FirebaseApp.initializeApp(this)
         setContentView(binding.root)
 
-        firebaseViewModel = ViewModelProvider(this)
-            .get(
-                FirebaseViewModel::class.java
-            )
+        firebaseViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+    }
 
-        firebaseViewModel.currentUser.observe(this) {
-            if (it == null) {
-                findNavController(
-                    androidx.navigation.fragment.
-                    R.id.nav_host_fragment_container
-                ).navigate(
-                        R.id.login_Fragment
-                    )
-            }
-        }
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        return super.onCreateView(name, context, attrs)
     }
 }
