@@ -6,7 +6,6 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,6 +20,8 @@ class MainViewModel : ViewModel() {
     val api = RecipeApiService.RecipeApi
 
     val repo = Repository(api)
+
+    private var countCardView = 0
 
     fun getRecipes(userInput : String) {
         try {
@@ -52,6 +53,44 @@ class MainViewModel : ViewModel() {
         modelBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
     }
 
+    fun nutrionCountCardViewOpener(holder: BottomSheetAdapter.ItemViewHolder, context: Context) {
+
+        countCardView ++
+
+        holder.ingriedientsWidgetIV.visibility = View.VISIBLE
+        holder.ingriedientsWidgetIV.animation = AnimationUtils.
+        loadAnimation(
+            context,R.anim.slide_up_animation
+        )
+        if (countCardView == 2) {
+            holder.ingriedientsWidgetIV.visibility = View.GONE
+            holder.ingriedientsWidgetIV.animation = AnimationUtils.
+            loadAnimation(
+                context,R.anim.slide_down_animation
+            )
+            countCardView = 0
+        }
+    }
+
+    fun infoCountCardViewOpener(holder: BottomSheetAdapter.ItemViewHolder, context: Context) {
+
+        countCardView ++
+
+        holder.recipeInfoCardView2.visibility = View.VISIBLE
+        holder.ingriedientsWidgetIV.animation = AnimationUtils.
+        loadAnimation(
+            context,R.anim.slide_up_animation
+        )
+        if (countCardView == 2) {
+            holder.recipeInfoCardView2.visibility = View.GONE
+            holder.ingriedientsWidgetIV.animation = AnimationUtils.
+            loadAnimation(
+                context,R.anim.slide_down_animation
+            )
+            countCardView = 0
+        }
+    }
+
     fun closeBottomSheet(supportFragmentManager:FragmentManager) {
         val fragment = supportFragmentManager.findFragmentByTag(ModalBottomSheet.TAG)
         if (fragment is ModalBottomSheet) {
@@ -66,7 +105,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun slideInFromLeftAnimationTV(animatedTextView: TextView, context: Context) {
-
         val animationSlideFromLeft = AnimationUtils.loadAnimation(
             context,
             R.anim.slide_in_from_left
