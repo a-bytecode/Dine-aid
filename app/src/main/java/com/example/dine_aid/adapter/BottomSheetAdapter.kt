@@ -102,7 +102,9 @@ class BottomSheetAdapter(
                     context,R.anim.slide_down_animation
                 )
             holder.recipeInfoCardView2.visibility = View.GONE
-        }
+
+            viewModel.closeBottomSheet(supportFragmentManager)
+         }
 
         holder.recipeInfoCardView1.setOnClickListener {
             viewModel.infoCountCardViewOpener(holder,context)
