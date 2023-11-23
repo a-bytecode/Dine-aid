@@ -72,6 +72,8 @@ class HomeFragment : Fragment() {
 
                 if (!query.isNullOrBlank()) {
                     viewModel.getRecipes(query)
+                    //Hier wird die Eingabe des Nutzers wieder gelöscht.
+                    searchView.setQuery("",false)
                     Log.d("QueryTextTest", "Text -> ${query}")
 
                     val inputMethodManager =
@@ -79,9 +81,8 @@ class HomeFragment : Fragment() {
                             Context.INPUT_METHOD_SERVICE
                         ) as InputMethodManager?
                     inputMethodManager?.hideSoftInputFromWindow(searchView.windowToken, 0)
-
-                    binding.headerMain.requestFocus()
-
+                    // Hier wird die SearchView wieder zurückgesetzt.
+                    searchView.isIconified = true
                 }
 
                 return true

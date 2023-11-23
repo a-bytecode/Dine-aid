@@ -49,7 +49,6 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
                 Log.d("recipeInfoIsNull2","recipeInfo -> ${it}")
             }
         }
-
-
     }
+
 }

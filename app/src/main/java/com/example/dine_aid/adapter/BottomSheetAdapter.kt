@@ -47,7 +47,7 @@ class BottomSheetAdapter(
         val recipeInfoCardView1 = view.findViewById<CardView>(R.id.recipeInfo_cardView1_item)
         val recipeInfoCardView2 = view.findViewById<CardView>(R.id.recipeInfo_cardView2_item)
         val nutritionStatisticsCardView = view.findViewById<CardView>(R.id.nutrionInfo_cardView1_item)
-        val okbtng = view.findViewById<Button>(R.id.okbtng_item)
+        val closebtng = view.findViewById<Button>(R.id.closebtng_item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -91,63 +91,27 @@ class BottomSheetAdapter(
 
         }
 
-        var countCardView1 = 0
+        holder.recipeInfoCardView1.visibility = View.VISIBLE
+        holder.minutes_TV_Item.text = recipeInfoData?.readyInMinutes.toString()
+        holder.servingsNumberTVitem.text = recipeInfoData?.servings.toString()
+        holder.instructionsTV.text = recipeInfoData?.instructions
 
-        holder.recipeInfoCardView1.setOnClickListener {
-
-            countCardView1 ++
-
-            Log.d("countCradView1",
-                "Count -> $countCardView1")
-
-            if (countCardView1 == 1) {
-                holder.recipeInfoCardView2.visibility = View.VISIBLE
-                holder.recipeInfoCardView2.animation = AnimationUtils
-                    .loadAnimation(
-                        context,R.anim.slide_up_animation
-                    )
-                holder.okbtng.setOnClickListener {
-                    holder.recipeInfoCardView2.animation = AnimationUtils
-                        .loadAnimation(
-                            context,R.anim.slide_down_animation
-                        )
-                    holder.recipeInfoCardView2.visibility = View.GONE
-                }
-                if (recipeInfoData != null) {
-                    holder.minutes_TV_Item.text = recipeInfoData.readyInMinutes.toString()
-                    holder.servingsNumberTVitem.text = recipeInfoData.servings.toString()
-                    holder.instructionsTV.text = recipeInfoData.instructions
-                }
-                else {
-                    Log.d("recipeInfoData",
-                        "recipeInfoData is null ${recipeInfoData}")
-                }
-            }
-            if (countCardView1 == 2) {
-                countCardView1 = 0
-                holder.recipeInfoCardView2.visibility = View.GONE
-            }
-        }
-
-        var countCardView2 = 0
-        holder.nutritionStatisticsCardView.setOnClickListener {
-
-             countCardView2 ++
-
-                holder.ingriedientsWidgetIV.visibility = View.VISIBLE
-                holder.ingriedientsWidgetIV.animation = AnimationUtils.
-                loadAnimation(
-                    context,R.anim.slide_up_animation
-                )
-            if (countCardView2 == 2) {
-                holder.ingriedientsWidgetIV.visibility = View.GONE
-                holder.ingriedientsWidgetIV.animation = AnimationUtils.
-                loadAnimation(
+        holder.closebtng.setOnClickListener {
+            holder.recipeInfoCardView2.animation = AnimationUtils
+                .loadAnimation(
                     context,R.anim.slide_down_animation
                 )
-                countCardView2 = 0
-            }
+            holder.recipeInfoCardView2.visibility = View.GONE
 
+            viewModel.closeBottomSheet(supportFragmentManager)
+         }
+
+        holder.recipeInfoCardView1.setOnClickListener {
+            viewModel.infoCountCardViewOpener(holder,context)
+        }
+
+        holder.nutritionStatisticsCardView.setOnClickListener {
+            viewModel.nutrionCountCardViewOpener(holder,context)
         }
         holder.ingriedientsWidgetIV.setOnClickListener {
             openFullScreenImage()
