@@ -3,7 +3,8 @@
 
 Layout:
 
-- Erstellen im Homefragment den TextInput für den User, im Material Design 3 Layout. -> **erledigt** (SearchView)
+- Erstellen im Homefragment den TextInput für den User, im Material Design 3 Layout. -> **erledigt** (SearchView) -> **erledigt**
+
 - Entwurf des eigenen Icons für das App Symbol
 
 
@@ -13,8 +14,11 @@ Logik:
 
 - Erstellung des Retrofit Services und die Inbetriebnahme von der Base API anhand der Dokumentation. -> **erledigt**
 
-- Implementierung des Bottom Sheets im Zusammenhang mit den Recipe Details
+- Implementierung des Bottom Sheets im Zusammenhang mit den Recipe Details -> **erledigt**
 
--
+- Implementierung von Room Database
+
+- Erweiterung der Klassen für Attributen um: "Favoriten, Datum, lastAdded, lastWatched"
+
 
 ----------------------------------------------------------------------------------------------------

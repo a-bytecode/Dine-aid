@@ -38,6 +38,7 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="10dp"
                     android:text="Breaking Bread"
+                    android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold"
