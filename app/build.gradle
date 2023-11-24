@@ -1,14 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id("com.google.gms.google-services") // Firebase
+    id 'com.google.gms.google-services' // Firebase
     id 'kotlin-kapt'//Navigation
-
 }
 
 android {
     namespace 'com.example.dine_aid'
     compileSdk 34
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 
     defaultConfig {
         applicationId "com.example.dine_aid"
@@ -59,7 +63,6 @@ dependencies {
     //RoomDatabase
     implementation("androidx.room:room-runtime:2.6.0")
     kapt "androidx.room:room-compiler:2.6.0"
-
     //LocalDate
     implementation "org.threeten:threetenbp:1.5.1"
     //RecyclerView
