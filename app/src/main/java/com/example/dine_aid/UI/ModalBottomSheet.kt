@@ -1,17 +1,14 @@
 package com.example.dine_aid.UI
 
 import BottomSheetAdapter
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.activityViewModels
 import com.example.dine_aid.databinding.BottomSheetLayoutBinding
 import com.example.dine_aid.model.MainViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ModalBottomSheet : BottomSheetDialogFragment() {

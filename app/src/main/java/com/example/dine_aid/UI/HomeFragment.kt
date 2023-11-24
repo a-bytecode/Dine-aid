@@ -13,15 +13,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet.Constraint
-import androidx.constraintlayout.widget.Constraints
-import androidx.core.content.ContextCompat
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
 import com.example.dine_aid.R
 import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.databinding.HomeFragmentBinding
