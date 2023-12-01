@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.example.dine_aid.databinding.ActivityMainBinding
+import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

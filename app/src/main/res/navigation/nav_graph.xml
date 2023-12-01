@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:id="@+id/nav_graph"
     app:startDestination="@id/login_Fragment">
     <fragment
@@ -11,10 +11,13 @@
         <action
             android:id="@+id/action_homeFragment_to_bottomSheetFragment"
             app:destination="@id/bottomSheetFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_login_Fragment"
+            app:destination="@id/login_Fragment" />
     </fragment>
     <fragment
         android:id="@+id/bottomSheetFragment"
-        android:name="com.example.dine_aid.UI.BottomSheetFragment"
+        android:name="com.example.dine_aid.UI.ModalBottomSheet"
         android:label="BottomSheetFragment" >
         <action
             android:id="@+id/action_bottomSheetFragment_to_homeFragment"
