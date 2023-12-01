@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
@@ -17,12 +18,47 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-
     private val api = RecipeApiService.RecipeApi
 
     val repo = Repository(api)
 
     private var countCardView = 0
+
+    private var authType: AuthType
+
+    init {
+        // Hier initialisiere ich authType
+        // mit einem gewünschten Startwert.
+        authType = AuthType.LOGIN
+        // der init block dient dazu um als
+        // erstes bei der Ausführung der View
+        // Funktionen zu starten,
+        // oder wie im Beispiel Elemente zu initialisieren.
+    }
+
+    enum class AuthType {
+        LOGIN, SIGN_IN
+    }
+
+    fun updateUI(button: Button, header: TextView, header2:TextView) {
+
+        when(authType) {
+            AuthType.LOGIN -> {
+                button.text = "Login"
+                header.text = "Login"
+                header2.text = "New? Sign up here"
+            }
+            AuthType.SIGN_IN -> {
+                button.text = "Sign In"
+                header.text = "Sign In"
+                header2.text = "Back to login screen?"
+            }
+        }
+    }
+
+    fun toggleAuthType() {
+        authType = if (authType == AuthType.LOGIN) AuthType.SIGN_IN else AuthType.LOGIN
+    }
 
     fun getRecipes(userInput : String) {
         try {
