@@ -25,7 +25,8 @@ data class RecipeResult(
     @Json(name = "imageType")
     val imageType: String,
 
-    val lastWatched: String
+    @Json(name="lastWatched")
+    val lastWatched: String?
 
 ) {
     @Ignore

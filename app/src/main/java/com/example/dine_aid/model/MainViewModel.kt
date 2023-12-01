@@ -8,22 +8,19 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dine_aid.R
 import com.example.dine_aid.UI.ModalBottomSheet
-import com.example.dine_aid.local.getDatabase
 import com.example.dine_aid.remote.RecipeApiService
 import com.example.dine_aid.remote.Repository
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val database = getDatabase(application)
 
     private val api = RecipeApiService.RecipeApi
 
-    val repo = Repository(api,database)
+    val repo = Repository(api)
 
     private var countCardView = 0
 
