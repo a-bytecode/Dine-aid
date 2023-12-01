@@ -1,40 +1,40 @@
 package com.example.dine_aid.UI.login
 
-import android.content.Context
+import android.os.Binder
 import android.os.Bundle
-import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import com.example.dine_aid.R
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.dine_aid.databinding.LoginScreenBinding
-import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
 
-class Login_Fragment : AppCompatActivity() {
+class Login_Fragment : Fragment() {
 
-    private lateinit var binding: LoginScreenBinding
+    private lateinit var binding : LoginScreenBinding
 
-    private lateinit var firebaseViewModel: FirebaseViewModel
+    private val viewModel : MainViewModel by activityViewModels()
 
-    private lateinit var viewModel: MainViewModel
+    override fun onCreateView(
 
-    private lateinit var userMail : String
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this)
-
-        binding = LoginScreenBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        firebaseViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = LoginScreenBinding.inflate(inflater)
+        return binding.root
     }
 
-    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        return super.onCreateView(name, context, attrs)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding.loginHeader2.setOnClickListener {
+            viewModel.toggleAuthType()
+            viewModel.updateUI(
+                binding.loginbtng,
+                binding.loginHeader,
+                binding.loginHeader2
+            )
+        }
     }
 }
