@@ -48,6 +48,7 @@
                     android:ems="10"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
+                    android:minHeight="48dp"
                     android:textColorHint="#FFFFFF"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +64,7 @@
                     android:ems="10"
                     android:hint="Password"
                     android:inputType="textPassword"
+                    android:minHeight="48dp"
                     android:textColorHint="#FFFFFF"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +76,6 @@
                     android:id="@+id/login_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:fontFamily="sans-serif-smallcaps"
                     android:shadowColor="@color/black"
                     android:shadowDx="10"
@@ -100,7 +101,8 @@
             app:layout_constraintBottom_toTopOf="@+id/devider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="NotSibling">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -177,11 +179,11 @@
             android:id="@+id/loginbtng"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="70dp"
-            android:text="Login"
+            android:layout_marginBottom="50dp"
             android:elevation="20dp"
             android:paddingHorizontal="50dp"
             android:paddingVertical="5dp"
+            android:text="Login"
             app:layout_constraintBottom_toTopOf="@+id/login_header2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

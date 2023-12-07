@@ -24,7 +24,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private var countCardView = 0
 
-    private var authType: AuthType
+    var authType: AuthType
 
     init {
         // Hier initialisiere ich authType
