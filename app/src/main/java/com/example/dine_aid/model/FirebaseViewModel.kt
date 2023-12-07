@@ -21,11 +21,13 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 _currentUser.value = firebaseAuth.currentUser
+                Log.d("SUCCESS", "task is succesful -> $task")
             } else {
                 Log.d("NOSUCCESS", "task is not succesful -> $task")
             }
-
         }
+            .addOnFailureListener { e ->
+            Log.e("FIREBASE_ERROR","Firebase auth failed",e)
+            }
     }
-
 }

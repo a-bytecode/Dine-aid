@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.dine_aid.R
 import com.example.dine_aid.UI.ModalBottomSheet
@@ -24,12 +26,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private var countCardView = 0
 
-    var authType: AuthType
+    private val _authType = MutableLiveData<AuthType>()
+    val authType : LiveData<AuthType>
+        get() = _authType
 
     init {
         // Hier initialisiere ich authType
         // mit einem gewünschten Startwert.
-        authType = AuthType.LOGIN
+        _authType.value = AuthType.LOGIN
         // der init block dient dazu um als
         // erstes bei der Ausführung der View
         // Funktionen zu starten,
@@ -42,7 +46,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateUI(button: Button, header: TextView, header2:TextView) {
 
-        when(authType) {
+        when(_authType.value) {
             AuthType.LOGIN -> {
                 button.text = "Login"
                 header.text = "Login"
@@ -53,11 +57,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 header.text = "Sign In"
                 header2.text = "Back to login screen?"
             }
+            else -> {
+                Log.d("AuthTypeIsNull","Auth Type when is null")
+
+            }
         }
     }
 
     fun toggleAuthType() {
-        authType = if (authType == AuthType.LOGIN) AuthType.SIGN_IN else AuthType.LOGIN
+        _authType.value = if (_authType.value == AuthType.LOGIN) AuthType.SIGN_IN else AuthType.LOGIN
     }
 
     fun getRecipes(userInput : String) {
