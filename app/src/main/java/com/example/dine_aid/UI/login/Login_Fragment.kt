@@ -71,7 +71,7 @@ class Login_Fragment : Fragment() {
                             firebaseViewModel.createAccount(emailInput,pwdInput,requireContext())
                         } else {
                             Toast.makeText(requireContext(),"Sign In Failed",
-                                Toast.LENGTH_LONG
+                                Toast.LENGTH_SHORT
                             ).show()
                         }
                     }

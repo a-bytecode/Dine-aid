@@ -28,7 +28,10 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             if (task.isSuccessful) {
                 _currentUserType.value = MainViewModel.AuthType.SIGN_IN
                 _currentUser.value = firebaseAuth.currentUser
-                Toast.makeText(context,"Account Created",Toast.LENGTH_LONG).show()
+                Toast.makeText(context,
+                    "Account Created",
+                    Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 Log.d("NOSUCCESS", "task is not succesful -> $task")
             }
@@ -48,7 +51,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     Log.d("LOGIN_FAILURE", "Login failed", task.exception)
                     Toast.makeText(context,
                         "Login Failed",
-                        Toast.LENGTH_LONG)
+                        Toast.LENGTH_SHORT)
                         .show()
                 }
             }
