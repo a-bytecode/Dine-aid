@@ -8,6 +8,14 @@ import com.squareup.moshi.JsonClass
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+interface lastWatched {
+    val lastWatched : String?
+    fun formatLastWatched(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return LocalDate.parse(lastWatched, formatter).format(formatter)
+    }
+}
+
 @Entity(tableName = "RecipeResult")
 @JsonClass(generateAdapter = true)
 data class RecipeResult(
@@ -26,15 +34,5 @@ data class RecipeResult(
     val imageType: String,
 
     @Json(name="lastWatched")
-    val lastWatched: String?
-
-) {
-    @Ignore
-    constructor() : this(0,"","","","")
-    // Hier wird das LastWatched Attribut zum String Formatiert damit die Datenbank es als
-    // Primitiven Datentyp aufnehmen kann.
-    fun formatLastWatched(): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        return LocalDate.parse(lastWatched, formatter).format(formatter)
-    }
-}
+    override val lastWatched: String?,
+    ) : lastWatched
