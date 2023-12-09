@@ -1,18 +1,20 @@
 package com.example.dine_aid.data
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-interface lastWatched {
+interface LastWatched {
     val lastWatched : String?
     fun formatLastWatched(): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        return LocalDate.parse(lastWatched, formatter).format(formatter)
+        return lastWatched?.let {
+            try {
+                LocalDate.parse(it,formatter).format(formatter)
+            } catch (e:Exception) { "InvalidDate"} } ?: "DefaultIfNull"
     }
 }
 
@@ -35,4 +37,7 @@ data class RecipeResult(
 
     @Json(name="lastWatched")
     override val lastWatched: String?,
-    ) : lastWatched
+    // Das Schlüsselwort Override bekommt der Compiler erst den Bezug zum Interface,
+    // es ist eine syntaktische Anforderung des Kotlin Kompilers. Es ist erforderlich Override
+    // explizit anzugeben damit es die Eigenschaft aus dem Interface überschreiben kann.
+    ) : LastWatched
