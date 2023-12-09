@@ -18,23 +18,15 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
     private val _recipeInfo = MutableLiveData<RecipeInfo>()
     val recipeInfo : LiveData<RecipeInfo> = _recipeInfo
 
-//    suspend fun insertRecipeWithFormattedDate(recipe: RecipeResult) {
-//        val formattedDate = recipe.formatLastWatched()
-//        val recipeWithFormattedDate = recipe.copy(lastWatched = formattedDate)
-//        dB.insertRecipe(recipeWithFormattedDate)
-//    }
-
     suspend fun getRecipes(userInput: String) {
 
         val response : RecipeResponse = api.retrofitService.searchRecipes(userInput,"636x393")
 
-//        response.recipes.forEach { recipe ->
-//            insertRecipeWithFormattedDate(recipe)
-//        }
-//
-//        dB.insertRecipeResults(response.recipes)
-        _recipes.value = response.recipes
-
+        val updateRecipes = response.recipes.map { recipe ->
+            // map erstellt eine neue Liste und konvertiert den Datentyp Date zu einem String.
+            recipe.copy(lastWatched = recipe.formatLastWatched())
+        }
+         _recipes.value = updateRecipes
     }
 
     suspend fun loadRecipeInfo(recipeID: Int) {
@@ -48,7 +40,6 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
         }
 
         _recipeInfo.value = responseRecipeInfo
-
     }
 
     fun loadRecipeNutritionWidgetByID(recipeID: Int) {
