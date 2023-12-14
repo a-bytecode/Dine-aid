@@ -15,10 +15,6 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    val db = FirebaseDatabase.getInstance()
-
-    val userReference = db.getReference("users")
-
     private val _currentUser = MutableLiveData<FirebaseUser?>(firebaseAuth.currentUser)
     val currentUser: LiveData<FirebaseUser?>
         get() = _currentUser
@@ -38,6 +34,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     "Account Created",
                     Toast.LENGTH_SHORT)
                     .show()
+                Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${task.result}")
             } else {
                 Log.d("NOSUCCESS", "task is not succesful -> $task")
             }
@@ -65,11 +62,23 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
     private fun saveUserToDatabase(user: FirebaseUser?) {
 
-        val userData  = hashMapOf(
-            "userID" to user?.uid,
-            "email" to user?.email
-        )
+        val db = FirebaseDatabase.getInstance()
 
-        userReference.child(user?.uid ?:"DefaultUser").setValue(userData)
+        val userReference = db.getReference("Users")
+
+        Log.d("SAVE_TO_DATABASE", "saveUserToDatabase called.")
+
+        if (user != null) {
+            val userData  = hashMapOf("userID" to user.uid, "email" to user.email)
+
+            userReference.child(user.uid).setValue(userData)
+
+            Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${user.uid}")
+        } else {
+            Log.e("SAVE_TO_DATABASE", "User is null.")
+
+        }
+
+
     }
 }
