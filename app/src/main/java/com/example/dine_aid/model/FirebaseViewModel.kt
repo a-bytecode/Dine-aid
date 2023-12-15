@@ -4,12 +4,24 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dine_aid.databinding.LoginScreenBinding
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.SignInMethodQueryResult
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class FirebaseViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -43,6 +55,39 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             Log.e("FIREBASE_ERROR","Firebase auth failed",e)
             }
     }
+
+    fun ckeckIfEmailExist(email: String, binding: LoginScreenBinding) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val task = withContext(Dispatchers.IO) {
+                    suspendCoroutine<Task<SignInMethodQueryResult>> { continuation ->
+                        firebaseAuth.fetchSignInMethodsForEmail(email)
+                            .addOnCompleteListener { task ->
+                                continuation.resume(task)
+                            }
+                    }
+                }
+                if (task.isSuccessful) {
+                    val signInMethods = task.result?.signInMethods
+                    if (signInMethods != null && signInMethods.isNotEmpty()) {
+                        Log.d("taskEnabled", "Task wird ausgeführt")
+                    } else {
+                        Log.d("taskEnabled", "Task wird nicht ausgeführt")
+                        binding.existTV.alpha = 1.0f
+                        delay(4000)
+                        binding.existTV.alpha = 0.0f
+                        Log.d("taskEnabled", "Task wird nicht ausgeführt1")
+                    }
+                } else {
+                    Log.d("taskEnabled", "Task ist nicht erfolgreich: ${task.exception?.message}")
+                }
+            } catch (e:Exception) {
+                Log.e("CoroutineException", "Error in Coroutine: ${e.message}")
+            }
+
+        }
+    }
+
     fun loginAccount(email: String,password: String,context: Context) {
         firebaseAuth.signInWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
@@ -78,7 +123,5 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             Log.e("SAVE_TO_DATABASE", "User is null.")
 
         }
-
-
     }
 }

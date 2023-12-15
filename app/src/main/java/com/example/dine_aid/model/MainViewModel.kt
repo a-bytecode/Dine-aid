@@ -59,7 +59,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
             else -> {
                 Log.d("AuthTypeIsNull","Auth Type when is null")
-
             }
         }
     }

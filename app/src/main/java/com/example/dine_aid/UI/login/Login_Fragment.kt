@@ -1,6 +1,5 @@
 package com.example.dine_aid.UI.login
 
-import android.os.Binder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +28,7 @@ class Login_Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = LoginScreenBinding.inflate(inflater)
         return binding.root
     }
@@ -69,7 +69,9 @@ class Login_Fragment : Fragment() {
 
                         if (emailInput.isNotEmpty() && pwdInput.isNotEmpty()) {
                             firebaseViewModel.createAccount(emailInput,pwdInput,requireContext())
+                            firebaseViewModel.ckeckIfEmailExist(emailInput,binding)
                         } else {
+                            binding.existTV.alpha = 0.0f
                             Toast.makeText(requireContext(),"Sign In Failed",
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -86,7 +88,10 @@ class Login_Fragment : Fragment() {
                 }
                 MainViewModel.AuthType.LOGIN -> {
 
+                    binding.existTV.alpha = 0.0f
+
                     binding.loginbtng.setOnClickListener {
+
                         val emailInput = binding.editTextTextEmailAddress.text.toString()
                         val pwdInput = binding.editTextTextPassword.text.toString()
 

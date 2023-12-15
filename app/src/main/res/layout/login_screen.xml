@@ -25,6 +25,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <TextView
+            android:id="@+id/existTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="sans-serif"
+            android:text="The email address is already in use by another account."
+            android:textColor="#FF0000"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/loginbtng"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="0dp"
