@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.SignInMethodQueryResult
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -105,23 +106,26 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 }
             }
     }
+
     private fun saveUserToDatabase(user: FirebaseUser?) {
 
-        val db = FirebaseDatabase.getInstance()
-
-        val userReference = db.getReference("Users")
-
-        Log.d("SAVE_TO_DATABASE", "saveUserToDatabase called.")
+        val db = FirebaseFirestore.getInstance()
 
         if (user != null) {
+
             val userData  = hashMapOf("userID" to user.uid, "email" to user.email)
 
-            userReference.child(user.uid).setValue(userData)
+            val userReference = db.collection("Users").document(user.uid)
 
-            Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${user.uid}")
+            userReference.set(userData)
+                .addOnSuccessListener {
+                    Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${user.uid}")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SAVE_TO_DATABASE", "Error saving user to database", e)
+                }
         } else {
             Log.e("SAVE_TO_DATABASE", "User is null.")
-
         }
     }
 }
