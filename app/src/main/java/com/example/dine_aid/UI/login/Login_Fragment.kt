@@ -27,7 +27,7 @@ class Login_Fragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = LoginScreenBinding.inflate(inflater)
         return binding.root
@@ -44,8 +44,6 @@ class Login_Fragment : Fragment() {
                     }
                     MainViewModel.AuthType.SIGN_IN -> {
                         Log.d("SignInA","SignIn was not Accepted to $user")
-                        Toast.makeText(requireContext(),"Account Created",
-                            Toast.LENGTH_LONG).show()
                     }
                     else -> if (firebaseViewModel.currentUserType.value == null) {
                         Log.d("observeFail","Observing current User Fail")
@@ -68,10 +66,13 @@ class Login_Fragment : Fragment() {
                         Log.d("isCLicked", "after input")
 
                         if (emailInput.isNotEmpty() && pwdInput.isNotEmpty()) {
-                            firebaseViewModel.createAccount(emailInput,pwdInput,requireContext())
-                            firebaseViewModel.ckeckIfEmailExist(emailInput,binding)
+                            firebaseViewModel.createAccountIfEmailNotExists(
+                                emailInput,
+                                pwdInput,
+                                requireContext(),
+                                binding
+                            )
                         } else {
-                            binding.existTV.alpha = 0.0f
                             Toast.makeText(requireContext(),"Sign In Failed",
                                 Toast.LENGTH_SHORT
                             ).show()
