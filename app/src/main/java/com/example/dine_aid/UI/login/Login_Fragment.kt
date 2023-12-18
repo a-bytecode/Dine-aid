@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.dine_aid.R
 import com.example.dine_aid.databinding.LoginScreenBinding
@@ -35,12 +37,19 @@ class Login_Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        binding.existTVCardView.alpha = 0.0f
+        binding.existTV.alpha = 0.0f
+
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 when (firebaseViewModel.currentUserType.value) {
                     MainViewModel.AuthType.LOGIN -> {
-                        Log.d("LoggingA","Login Accepted to $user")
-                        findNavController().navigate(R.id.homeFragment)
+
+                         val options = NavOptions.Builder()
+                            .setEnterAnim(R.anim.slide_in_left)
+                            .build()
+
+                        findNavController().navigate(R.id.homeFragment,null, options)
                     }
                     MainViewModel.AuthType.SIGN_IN -> {
                         Log.d("SignInA","SignIn was not Accepted to $user")

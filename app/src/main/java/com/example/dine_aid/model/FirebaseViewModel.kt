@@ -3,6 +3,7 @@ package com.example.dine_aid.model
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -55,10 +56,16 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     try {
                         signInWithEmailAndPasswordAsync(email, password)
                     Log.d("taskEnabled", "E-Mail existiert bereits")
+
+                    binding.existTVCardView.alpha = 1.0f
                     binding.existTV.alpha = 1.0f
-                    delay(4000)
+
+                        delay(4000)
+
+                    binding.existTVCardView.alpha = 0.0f
                     binding.existTV.alpha = 0.0f
-                    Log.d("taskEnabled", "Task wird nicht ausgeführt1")
+
+                        Log.d("taskEnabled", "Task wird nicht ausgeführt1")
                 } catch (e : FirebaseAuthException) {
                     Log.d("taskEnabled", "E-Mail existiert nicht, Account wird erstellt")
                     createAccount(email, password, context)
