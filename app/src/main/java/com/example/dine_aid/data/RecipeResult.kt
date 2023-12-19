@@ -4,19 +4,25 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 interface LastWatched {
     val lastWatched : String?
     fun formatLastWatched(): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
         return lastWatched?.let {
             try {
-                LocalDate.parse(it,formatter).format(formatter)
-            } catch (e:Exception) { "InvalidDate"} } ?: "DefaultIfNull"
+                LocalDateTime.parse(it,formatter).format(formatter)
+            } catch (e:Exception) {
+                LocalDateTime.now().format(formatter)
+            }
+        } ?: run {
+            LocalDateTime.now().format(formatter)
+        }
     }
 }
+
 
 @Entity(tableName = "RecipeResult")
 @JsonClass(generateAdapter = true)

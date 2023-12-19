@@ -20,6 +20,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.dine_aid.R
 import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.databinding.HomeFragmentBinding
+import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
 
 class HomeFragment : Fragment() {
@@ -27,6 +28,8 @@ class HomeFragment : Fragment() {
     private lateinit var binding : HomeFragmentBinding
 
     private val viewModel : MainViewModel by activityViewModels()
+
+    private val firebaseViewModel : FirebaseViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +47,8 @@ class HomeFragment : Fragment() {
         val recipeResultAdapter = RecipeResultAdapter(
             requireContext(),
             parentFragmentManager,
-            viewModel
+            viewModel,
+            firebaseViewModel
         )
 
         binding.recyclerView.adapter = recipeResultAdapter
