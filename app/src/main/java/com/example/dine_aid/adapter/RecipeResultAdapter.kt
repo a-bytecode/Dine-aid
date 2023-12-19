@@ -14,12 +14,14 @@ import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.dine_aid.R
 import com.example.dine_aid.data.RecipeResult
+import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
 
 class RecipeResultAdapter(
     val context: Context,
     val supportFragmentManager: FragmentManager,
-    val viewModel: MainViewModel
+    val viewModel: MainViewModel,
+    val firebaseViewModel: FirebaseViewModel
 ) : RecyclerView.Adapter<RecipeResultAdapter.ItemViewHolder>() {
 
     var dataset = listOf<RecipeResult>()
@@ -78,6 +80,7 @@ class RecipeResultAdapter(
             viewModel.useBottomSheet(supportFragmentManager)
             viewModel.loadRecipeInfo(recipeData.id)
             viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
+            firebaseViewModel.saveLastWatchedResult(recipeData)
         }
     }
 

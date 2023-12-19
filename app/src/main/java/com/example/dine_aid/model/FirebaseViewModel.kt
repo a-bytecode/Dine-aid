@@ -3,11 +3,11 @@ package com.example.dine_aid.model
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +27,8 @@ import kotlin.coroutines.suspendCoroutine
 class FirebaseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
+
+    private val db = FirebaseFirestore.getInstance()
 
     private val _currentUser = MutableLiveData<FirebaseUser?>(firebaseAuth.currentUser)
     val currentUser: LiveData<FirebaseUser?>
@@ -83,7 +85,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             if (task.isSuccessful) {
                 _currentUserType.value = MainViewModel.AuthType.SIGN_IN
                 _currentUser.value = firebaseAuth.currentUser
-                saveUserToDatabase(_currentUser.value)
+                saveUserToDatabaseNoRecipeResult(_currentUser.value)
                 Toast.makeText(context,"Account created $email",Toast.LENGTH_SHORT).show()
                 Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${task.result}")
             } else {
@@ -113,9 +115,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             }
     }
 
-    private fun saveUserToDatabase(user: FirebaseUser?) {
-
-        val db = FirebaseFirestore.getInstance()
+    private fun saveUserToDatabase(user: FirebaseUser?,recipeResult: RecipeResult?) {
 
         if (user != null) {
             val userData  = hashMapOf(
@@ -129,8 +129,11 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
             userDocumentReference.set(userData)
                 .addOnSuccessListener {
-                    createUserSubCollection(userDocumentReference)
+                    recipeResult?.let {
+                        createUserSubCollection(userDocumentReference,it)
+                    }
                     Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${user.uid}")
+
                 }
                 .addOnFailureListener { e ->
                     Log.e("SAVE_TO_DATABASE", "Error saving user to database", e)
@@ -140,15 +143,30 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private fun createUserSubCollection(userDocumentReference: DocumentReference) {
+    private fun saveUserToDatabaseNoRecipeResult(user: FirebaseUser?) {
+        saveUserToDatabase(user,null)
+    }
+
+
+    fun saveLastWatchedResult(recipeResult: RecipeResult) {
+
+        if (currentUser.value != null) {
+            val usersCollection = db.collection("Users")
+            val userDocumentReference = usersCollection.document(currentUser.value!!.uid)
+
+            createUserSubCollection(userDocumentReference,recipeResult)
+        }
+    }
+
+    private fun createUserSubCollection(userDocumentReference: DocumentReference, recipeResult: RecipeResult) {
 
         val watchHistoryCollection = userDocumentReference.collection("watchHistory")
 
         val watchHistoryData = hashMapOf(
-            "id" to null,
-            "title" to null,
-            "image" to null,
-            "lastWatched" to null
+            "id" to recipeResult.id,
+            "title" to recipeResult.title,
+            "image" to recipeResult.image,
+            "lastWatched" to recipeResult.lastWatched
         )
 
         watchHistoryCollection.add(watchHistoryData)
