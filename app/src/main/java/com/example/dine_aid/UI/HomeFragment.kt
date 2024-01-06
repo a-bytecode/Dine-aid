@@ -37,6 +37,8 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val recipeResultAdapter = RecipeResultAdapter(
@@ -53,34 +55,40 @@ class HomeFragment : Fragment() {
             firebaseViewModel
         )
 
-        binding.recipeResultRecycler.adapter = recipeResultAdapter
-
         viewModel.slideInFromLeftAnimationTV(
-                binding.bottomTV,
-                requireContext()
+            binding.bottomTV,
+            requireContext()
         )
 
-        firebaseViewModel.fetchLastWatchedResults()
+        viewModel.toggleSearchState(false)
+
+        viewModel.isSearching.observe(viewLifecycleOwner) { isSearching ->
+            if (isSearching == false) {
+                firebaseViewModel.fetchLastWatchedResults()
+                binding.latestResultsTV.alpha = 1f
+                binding.recipeResultRecycler.adapter = lastWatchedAdapter
+
+                firebaseViewModel.lastWatchedLiveData.observe(viewLifecycleOwner) {
+                    lastWatchedAdapter.submitList(it)
+                    Log.d("lastWatchedListCheck1", "lastWatched Size -> ${it.size}")
+                }
+            } else {
+                binding.latestResultsTV.alpha = 0f
+                binding.recipeResultRecycler.adapter = recipeResultAdapter
+
+                viewModel.repo.recipes.observe(viewLifecycleOwner) {
+                    recipeResultAdapter.submitList(it)
+                }
+        }
+    }
 
         val searchView = view.findViewById<SearchView>(R.id.searchView)
-
-        firebaseViewModel.lastWatchedLiveData.observe(viewLifecycleOwner) { lastWatchedResults ->
-            if (lastWatchedResults.isEmpty()) {
-                binding.latestResultsTV.alpha = 0f
-                Log.d("lastwatchedTester","nomral recipes kategory -> Kategory")
-                viewModel.repo.recipes.observe(viewLifecycleOwner) { recipes ->
-                    recipeResultAdapter.submitList(recipes) }
-                } else {
-                    binding.latestResultsTV.alpha = 1f
-                Log.d("lastwatchedTester","lastWatched -> Kategory")
-                recipeResultAdapter.submitList(lastWatchedResults)
-                }
-            }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 if (!query.isNullOrBlank()) {
+                    viewModel.toggleSearchState(true)
                     viewModel.getRecipes(query)
                     //Hier wird die Eingabe des Nutzers wieder gelöscht.
                     searchView.setQuery("",false)

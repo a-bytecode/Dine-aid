@@ -41,6 +41,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     private val _lastWatchedLiveData = MutableLiveData<List<RecipeResult>>()
     val lastWatchedLiveData : LiveData<List<RecipeResult>> = _lastWatchedLiveData
 
+
     fun fetchLastWatchedResults() {
         currentUser.value?.let { user ->
             val userDocumentReference = db.collection("Users").document(user.uid)
@@ -53,6 +54,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                         results.add(result)
                     }
                     _lastWatchedLiveData.value = results
+                    Log.d("lastWatchedFill","_lastWatchedLiveData List -> ${lastWatchedLiveData.value?.size}")
                 }
                 .addOnFailureListener { e ->
                     Log.e("FETCH_LAST_WATCHED", "Error fetching last watched results", e)
@@ -86,8 +88,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     delay(4000)
                     binding.existTVCardView.alpha = 0.0f
                     binding.existTV.alpha = 0.0f
-
-                        Log.d("taskEnabled", "Task wird nicht ausgeführt1")
+                    Log.d("taskEnabled", "Task wird nicht ausgeführt1")
                 } catch (e : FirebaseAuthException) {
                     Log.d("taskEnabled", "E-Mail existiert nicht, Account wird erstellt")
                     createAccount(email, password, context)

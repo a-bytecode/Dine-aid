@@ -26,6 +26,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private var countCardView = 0
 
+    private val _isSearching = MutableLiveData<Boolean>()
+    val isSearching: LiveData<Boolean>
+        get() = _isSearching
+
     private val _authType = MutableLiveData<AuthType>()
     val authType : LiveData<AuthType>
         get() = _authType
@@ -150,4 +154,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         animatedTextView.startAnimation(animationSlideFromLeft)
     }
 
+    // Diese Funktion Dient dazu, den jeweligen Adapter
+    // zwischen LastWatched und Recipes umzuschalten.
+    fun toggleSearchState(isSearching : Boolean) {
+       _isSearching.value = isSearching
+        Log.d("booleanTrigger", "$isSearching")
+    }
 }
