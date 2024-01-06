@@ -17,43 +17,44 @@ import com.example.dine_aid.R
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
+import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDateTime
 
-class RecipeResultAdapter(
-    val context: Context,
-    val supportFragmentManager: FragmentManager,
-    val viewModel: MainViewModel,
-    val firebaseViewModel: FirebaseViewModel
-) : RecyclerView.Adapter<RecipeResultAdapter.ItemViewHolder>() {
+class LastResultAdapter(val context: Context,
+                        val supportFragmentManager: FragmentManager,
+                        val viewModel: MainViewModel,
+                        val firebaseViewModel: FirebaseViewModel
+): RecyclerView.Adapter<LastResultAdapter.ItemViewHolder>() {
 
-    var dataset = listOf<RecipeResult>()
+    private var dataset = listOf<RecipeResult>()
 
     fun submitList(recipeResults: List<RecipeResult>) {
-        dataset = recipeResults
+        dataset = recipeResults.sortedByDescending { recipeResult ->
+            recipeResult.formatLastWatched()
+        }
         notifyDataSetChanged()
     }
 
     class ItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
-
         val title = view.findViewById<TextView>(R.id.titleTV_item)
         val image = view.findViewById<ImageView>(R.id.imageIV_item)
         val secondCardView = view.findViewById<CardView>(R.id.secondCardView)
         val clickHereCarView = view.findViewById<CardView>(R.id.clickHereToSeeMoreCardView)
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val itemLayout =
-            LayoutInflater.from(
-                parent.context).inflate(R.layout.reciperesult_item,
-                parent, false
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+            val itemLayout =
+                LayoutInflater.from(
+                    parent.context).inflate(R.layout.reciperesult_item,
+                    parent, false
                 )
-        return ItemViewHolder(itemLayout)
+            return ItemViewHolder(itemLayout)
     }
+
+
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-
         val recipeData = dataset[position]
-
         holder.title.text = recipeData.title
         holder.secondCardView.visibility = View.GONE
 
@@ -74,14 +75,13 @@ class RecipeResultAdapter(
             holder.clickHereCarView.animation =
                 AnimationUtils.loadAnimation(
                     context,R.anim.slide_up_animation
-            )
+                )
         }
 
         holder.clickHereCarView.setOnClickListener {
             viewModel.useBottomSheet(supportFragmentManager)
             viewModel.loadRecipeInfo(recipeData.id!!)
             viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
-
             firebaseViewModel.saveLastWatchedResult(recipeData)
         }
     }
@@ -89,4 +89,5 @@ class RecipeResultAdapter(
     override fun getItemCount(): Int {
         return dataset.size
     }
+
 }

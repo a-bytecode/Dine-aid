@@ -18,6 +18,7 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
     private val _recipeInfo = MutableLiveData<RecipeInfo>()
     val recipeInfo : LiveData<RecipeInfo> = _recipeInfo
 
+
     suspend fun getRecipes(userInput: String) {
 
         val response : RecipeResponse = api.retrofitService.searchRecipes(userInput,"636x393")

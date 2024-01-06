@@ -38,6 +38,30 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     val currentUserType : LiveData<MainViewModel.AuthType>
         get() = _currentUserType
 
+    private val _lastWatchedLiveData = MutableLiveData<List<RecipeResult>>()
+    val lastWatchedLiveData : LiveData<List<RecipeResult>> = _lastWatchedLiveData
+
+
+    fun fetchLastWatchedResults() {
+        currentUser.value?.let { user ->
+            val userDocumentReference = db.collection("Users").document(user.uid)
+            userDocumentReference.collection("watchHistory")
+                .get()
+                .addOnSuccessListener { documents ->
+                    val results = mutableListOf<RecipeResult>()
+                    for (document in documents) {
+                        val result = document.toObject(RecipeResult::class.java)
+                        results.add(result)
+                    }
+                    _lastWatchedLiveData.value = results
+                    Log.d("lastWatchedFill","_lastWatchedLiveData List -> ${lastWatchedLiveData.value?.size}")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("FETCH_LAST_WATCHED", "Error fetching last watched results", e)
+                }
+        }
+    }
+
     private suspend fun signInWithEmailAndPasswordAsync(email: String, password: String): AuthResult {
         return suspendCoroutine { continuation ->
             firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -61,13 +85,10 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
                     binding.existTVCardView.alpha = 1.0f
                     binding.existTV.alpha = 1.0f
-
-                        delay(4000)
-
+                    delay(4000)
                     binding.existTVCardView.alpha = 0.0f
                     binding.existTV.alpha = 0.0f
-
-                        Log.d("taskEnabled", "Task wird nicht ausgeführt1")
+                    Log.d("taskEnabled", "Task wird nicht ausgeführt1")
                 } catch (e : FirebaseAuthException) {
                     Log.d("taskEnabled", "E-Mail existiert nicht, Account wird erstellt")
                     createAccount(email, password, context)
@@ -86,8 +107,12 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 _currentUserType.value = MainViewModel.AuthType.SIGN_IN
                 _currentUser.value = firebaseAuth.currentUser
                 saveUserToDatabaseNoRecipeResult(_currentUser.value)
-                Toast.makeText(context,"Account created $email",Toast.LENGTH_SHORT).show()
-                Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${task.result}")
+                Toast.makeText(context,
+                    "Account created $email",
+                    Toast.LENGTH_SHORT)
+                    .show()
+                Log.d("SAVE_TO_DATABASE",
+                    "saveUserToDatabase executed successfully -> ${task.result}")
             } else {
                 Log.d("NOSUCCESS", "task is not succesful -> $task")
             }
@@ -132,7 +157,8 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     recipeResult?.let {
                         createUserSubCollection(userDocumentReference,it)
                     }
-                    Log.d("SAVE_TO_DATABASE", "saveUserToDatabase executed successfully -> ${user.uid}")
+                    Log.d("SAVE_TO_DATABASE",
+                        "saveUserToDatabase executed successfully -> ${user.uid}")
 
                 }
                 .addOnFailureListener { e ->
@@ -149,7 +175,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
 
     fun saveLastWatchedResult(recipeResult: RecipeResult) {
-
+        // Hier wird der LastwatchResult in die Collection "watchHistory gespeichert."
         if (currentUser.value != null) {
             val usersCollection = db.collection("Users")
             val userDocumentReference = usersCollection.document(currentUser.value!!.uid)

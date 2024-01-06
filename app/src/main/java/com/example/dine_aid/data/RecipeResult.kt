@@ -23,14 +23,13 @@ interface LastWatched {
     }
 }
 
-
 @Entity(tableName = "RecipeResult")
 @JsonClass(generateAdapter = true)
 data class RecipeResult(
 
     @PrimaryKey
     @Json(name = "id")
-    val id: Int,
+    val id: Int? = 0,
 
     @Json(name = "title")
     val title: String,
@@ -46,4 +45,6 @@ data class RecipeResult(
     // Das Schlüsselwort Override bekommt der Compiler erst den Bezug zum Interface,
     // es ist eine syntaktische Anforderung des Kotlin Kompilers. Es ist erforderlich Override
     // explizit anzugeben damit es die Eigenschaft aus dem Interface überschreiben kann.
-    ) : LastWatched
+) : LastWatched {
+    constructor() : this(null, "", "", "", null)
+}
