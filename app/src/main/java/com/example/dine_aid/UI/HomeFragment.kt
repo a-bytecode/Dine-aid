@@ -1,23 +1,18 @@
 package com.example.dine_aid.UI
 
 import android.content.Context
-import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.dine_aid.R
+import com.example.dine_aid.adapter.LastResultAdapter
 import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.databinding.HomeFragmentBinding
 import com.example.dine_aid.model.FirebaseViewModel
@@ -51,20 +46,36 @@ class HomeFragment : Fragment() {
             firebaseViewModel
         )
 
-        binding.recyclerView.adapter = recipeResultAdapter
+        val lastWatchedAdapter = LastResultAdapter(
+            requireContext(),
+            parentFragmentManager,
+            viewModel,
+            firebaseViewModel
+        )
+
+        binding.recipeResultRecycler.adapter = recipeResultAdapter
 
         viewModel.slideInFromLeftAnimationTV(
                 binding.bottomTV,
                 requireContext()
         )
 
+        firebaseViewModel.fetchLastWatchedResults()
 
         val searchView = view.findViewById<SearchView>(R.id.searchView)
 
-        viewModel.repo.recipes.observe(viewLifecycleOwner) { recipes ->
-            recipeResultAdapter.submitList(recipes)
-        }
-
+        firebaseViewModel.lastWatchedLiveData.observe(viewLifecycleOwner) { lastWatchedResults ->
+            if (lastWatchedResults.isEmpty()) {
+                binding.latestResultsTV.alpha = 0f
+                Log.d("lastwatchedTester","nomral recipes kategory -> Kategory")
+                viewModel.repo.recipes.observe(viewLifecycleOwner) { recipes ->
+                    recipeResultAdapter.submitList(recipes) }
+                } else {
+                    binding.latestResultsTV.alpha = 1f
+                Log.d("lastwatchedTester","lastWatched -> Kategory")
+                recipeResultAdapter.submitList(lastWatchedResults)
+                }
+            }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

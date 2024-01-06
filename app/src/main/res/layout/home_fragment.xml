@@ -29,20 +29,36 @@
             app:layout_constraintTop_toBottomOf="@+id/headerTV"
             app:searchHintIcon="@drawable/ic_baseline_search_24"
             app:searchIcon="@drawable/ic_baseline_search_24"
-            app:voiceIcon="@drawable/ic_baseline_keyboard_voice_24" />
+            app:voiceIcon="@drawable/ic_baseline_keyboard_voice_24" >
+
+        </androidx.appcompat.widget.SearchView>
+
+        <TextView
+            android:id="@+id/latestResultsTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="Latest Results"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recipe_result_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:background="#00FFFFFF"
+            android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/bottomTV"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView"
+            app:layout_constraintTop_toBottomOf="@+id/latestResultsTV"
             tools:listitem="@layout/reciperesult_item">
 
         </androidx.recyclerview.widget.RecyclerView>
