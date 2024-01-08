@@ -51,7 +51,9 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     val results = mutableListOf<RecipeResult>()
                     for (document in documents) {
                         val result = document.toObject(RecipeResult::class.java)
-                        results.add(result)
+                       if (!isRecipeResultExists(result.id,results)) {
+                           results.add(result)
+                       }
                     }
                     _lastWatchedLiveData.value = results
                     Log.d("lastWatchedFill","_lastWatchedLiveData List -> ${lastWatchedLiveData.value?.size}")
@@ -60,6 +62,10 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     Log.e("FETCH_LAST_WATCHED", "Error fetching last watched results", e)
                 }
         }
+    }
+
+    private fun isRecipeResultExists(recipeId: Int?,results: MutableList<RecipeResult>): Boolean {
+        return results.any { it.id == recipeId }
     }
 
     private suspend fun signInWithEmailAndPasswordAsync(email: String, password: String): AuthResult {
