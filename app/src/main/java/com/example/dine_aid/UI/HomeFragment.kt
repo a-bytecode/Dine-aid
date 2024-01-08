@@ -6,9 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
-
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.dine_aid.R
@@ -17,6 +18,7 @@ import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.databinding.HomeFragmentBinding
 import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
 
 class HomeFragment : Fragment() {
 
@@ -36,8 +38,6 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -111,7 +111,60 @@ class HomeFragment : Fragment() {
                 return true
             }
         })
+
+
+
+
+        binding.arrowUpIV.setOnClickListener {
+
+            binding.animCardView.visibility = View.GONE
+            binding.arrowDownIV.visibility = View.VISIBLE
+
+            //Hier wird der obere Constraint der RecyclerView mit Margin 0dp instanziiert.
+            val layoutParams = binding.recipeResultRecycler.layoutParams as LayoutParams
+            layoutParams.topMargin = 0
+
+            val constraintSet = ConstraintSet()
+
+            // Hier Clonen wir alle Elemente die in der ActivityMainContraint liegen.
+            constraintSet.clone(binding.activityMainConstrain)
+
+            // Hier weisen wir den Constraint der RecyclerView zu der ImageView zu.
+            constraintSet.connect(
+                binding.recipeResultRecycler.id,
+                ConstraintSet.TOP,
+                binding.arrowDownIV.id,
+                ConstraintSet.BOTTOM
+            )
+
+            constraintSet.applyTo(binding.activityMainConstrain)
+
+            binding.recipeResultRecycler.layoutParams = layoutParams
+        }
+
+        binding.arrowDownIV.setOnClickListener {
+
+            binding.animCardView.visibility = View.VISIBLE
+            binding.arrowDownIV.visibility = View.GONE
+
+            val layoutParams = binding.recipeResultRecycler.layoutParams as LayoutParams
+            layoutParams.topMargin = 0
+
+            val constraintSet = ConstraintSet()
+
+            constraintSet.clone(binding.activityMainConstrain)
+
+            // Hier weisen wir den Constraint wieder der RecyclerView zu der animCardView zu.
+            constraintSet.connect(
+                binding.recipeResultRecycler.id,
+                ConstraintSet.TOP,
+                binding.animCardView.id,
+                ConstraintSet.BOTTOM
+            )
+
+            constraintSet.applyTo(binding.activityMainConstrain)
+
+            binding.recipeResultRecycler.layoutParams = layoutParams
+        }
     }
-
-
 }
