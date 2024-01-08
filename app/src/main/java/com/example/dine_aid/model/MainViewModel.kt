@@ -34,6 +34,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val authType : LiveData<AuthType>
         get() = _authType
 
+    private val _imageURLToShow = MutableLiveData<String?>()
+    val imaURLToShow : LiveData<String?>
+        get() = _imageURLToShow
+
+
     init {
         // Hier initialisiere ich authType
         // mit einem gewünschten Startwert.
@@ -92,6 +97,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             Log.d("Request Recipe Info",
                 "No Response by this ID -> ${recipeID}")
         }
+    }
+
+
+    fun getImageUrlForRecipeId(recipeId: Int): String? {
+
+        val recipe = repo.recipes.value?.find { it.id == recipeId }
+        Log.d("ImgCheckerMVVM","load ${recipe?.image.toString()}")
+
+        _imageURLToShow.value = recipe?.image
+
+        return recipe?.image
     }
 
     fun useBottomSheet(supportFragmentManager:FragmentManager) {

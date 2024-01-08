@@ -32,9 +32,12 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val bottomSheetAdapter = BottomSheetAdapter(viewModel.repo,requireContext(),
+        val bottomSheetAdapter = BottomSheetAdapter(
+            viewModel.repo,
+            requireContext(),
             viewModel,
-            parentFragmentManager
+            parentFragmentManager,
+            viewLifecycleOwner
         )
 
         binding.ingridientswidgetRecycler.adapter = bottomSheetAdapter

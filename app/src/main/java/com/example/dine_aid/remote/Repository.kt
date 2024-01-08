@@ -1,5 +1,6 @@
 package com.example.dine_aid.remote
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dine_aid.BuildConfig
@@ -28,6 +29,8 @@ class Repository (private val api : RecipeApiService.RecipeApi) {
             recipe.copy(lastWatched = recipe.formatLastWatched())
         }
          _recipes.value = updateRecipes
+        Log.d("recipeSize", response.recipes.size.toString())
+
     }
 
     suspend fun loadRecipeInfo(recipeID: Int) {
