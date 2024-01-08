@@ -5,10 +5,15 @@ Layout:
 
 - Erstellen im Homefragment den TextInput für den User, im Material Design 3 Layout. -> **erledigt** (SearchView) -> **erledigt**
 
-- Entwurf des eigenen Icons für das App Symbol
+- Entwurf des eigenen Icons für das App Symbol -> **erledigt**
 
+- Verkleinerungs Option für die SearchView im Homefragment durch Animation per Click Implementieren.
 
-Logik:
+- Hamburger Menü für das Pop up Menü erstellen.
+
+- Pop Up Menu für die Favoriten und Profil Settings / Logout Settings implementieren.
+
+Code:
 
 - Implementierung des Textinputs in durch das MVVM Konzept in das HomeFragment. -> **erledigt**
 
@@ -16,9 +21,10 @@ Logik:
 
 - Implementierung des Bottom Sheets im Zusammenhang mit den Recipe Details -> **erledigt**
 
-- Implementierung von Room Database
+- Implementierung von Room Database / Firebase -> **erledigt**
 
 - Erweiterung der Klassen für Attributen um: "Favoriten, Datum, lastAdded, lastWatched"
 
+- Doppelte Einträge für die Datenbank entfernen und ein System für das Ersetzten eines doppelt vorhandenen Elementes erstellen.
 
 ----------------------------------------------------------------------------------------------------
