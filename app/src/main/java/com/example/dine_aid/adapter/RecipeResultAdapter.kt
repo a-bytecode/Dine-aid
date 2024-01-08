@@ -1,5 +1,6 @@
 package com.example.dine_aid.adapter
 
+import BottomSheetAdapter
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -78,11 +79,12 @@ class RecipeResultAdapter(
         }
 
         holder.clickHereCarView.setOnClickListener {
-            viewModel.useBottomSheet(supportFragmentManager)
-            viewModel.loadRecipeInfo(recipeData.id!!)
-            viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
+                viewModel.useBottomSheet(supportFragmentManager)
+                viewModel.loadRecipeInfo(recipeData.id!!)
+                viewModel.getImageUrlForRecipeId(recipeData.id)
+                viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
+                firebaseViewModel.saveLastWatchedResult(recipeData)
 
-            firebaseViewModel.saveLastWatchedResult(recipeData)
         }
     }
 

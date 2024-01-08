@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
@@ -26,7 +27,8 @@ class BottomSheetAdapter(
     val repo : Repository,
     val context: Context,
     val viewModel: MainViewModel,
-    val supportFragmentManager: FragmentManager
+    val supportFragmentManager: FragmentManager,
+    val lifecycleOwner: LifecycleOwner
     ) : RecyclerView.Adapter<BottomSheetAdapter.ItemViewHolder>() {
 
     var dataset : RecipeInfo? = null
@@ -36,7 +38,7 @@ class BottomSheetAdapter(
         notifyDataSetChanged()
     }
 
-    class ItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
         val tv_title_item = view.findViewById<TextView>(R.id.tv_title_item)
         val recipeImageView = view.findViewById<ImageView>(R.id.recipeIV_item)
@@ -48,6 +50,16 @@ class BottomSheetAdapter(
         val recipeInfoCardView2 = view.findViewById<CardView>(R.id.recipeInfo_cardView2_item)
         val nutritionStatisticsCardView = view.findViewById<CardView>(R.id.nutrionInfo_cardView1_item)
         val closebtng = view.findViewById<Button>(R.id.closebtng_item)
+
+
+        fun bind(lifecycleOwner: LifecycleOwner) {
+            viewModel.imaURLToShow.observe(lifecycleOwner) { url ->
+                recipeImageView.load(url) {
+                    Log.d("ImgCheckerBottomS", "loaded Image URL ${viewModel.imaURLToShow.value}")
+                    error(R.drawable.broken_img)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -64,14 +76,16 @@ class BottomSheetAdapter(
 
         if (recipeInfoData != null) {
             holder.tv_title_item.text = recipeInfoData.title
-            holder.recipeImageView.load(recipeInfoData.image) {
-                error(R.drawable.broken_img)
-            }
 
+            if (recipeInfoData.image == null) {
+                holder.bind(lifecycleOwner)
+            } else {
+                holder.recipeImageView.load(recipeInfoData.image)
+            }
         } else {
-            Log.d("recipeInfoData",
-                  "recipeInfoData is null ${recipeInfoData}")
+            Log.d("recipeInfoData","recipeInfoData is null ${recipeInfoData}")
         }
+
 
         val url = repo.nutritionWidgetImage.value
 
