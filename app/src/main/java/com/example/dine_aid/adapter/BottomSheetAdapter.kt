@@ -51,7 +51,6 @@ class BottomSheetAdapter(
         val nutritionStatisticsCardView = view.findViewById<CardView>(R.id.nutrionInfo_cardView1_item)
         val closebtng = view.findViewById<Button>(R.id.closebtng_item)
 
-
         fun bind(lifecycleOwner: LifecycleOwner) {
             viewModel.imaURLToShow.observe(lifecycleOwner) { url ->
                 recipeImageView.load(url) {
