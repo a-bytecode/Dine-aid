@@ -46,5 +46,15 @@ data class RecipeResult(
     // es ist eine syntaktische Anforderung des Kotlin Kompilers. Es ist erforderlich Override
     // explizit anzugeben damit es die Eigenschaft aus dem Interface überschreiben kann.
 ) : LastWatched {
-    constructor() : this(null, "", "", "", null)
+    companion object {
+        fun fromFirestoreData(data: Map<String, Any?>): RecipeResult {
+            return RecipeResult(
+                id = (data["id"] as? Long)?.toInt(),
+                title = data["title"] as? String ?: "",
+                image = data["image"] as? String ?: "",
+                imageType = data["imageType"] as? String ?: "",
+                lastWatched = data["lastWatched"] as? String
+            )
+        }
+    }
 }

@@ -9,12 +9,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -29,6 +33,8 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     private val db = FirebaseFirestore.getInstance()
+
+    private var listenerRegistration : ListenerRegistration? = null
 
     private val _currentUser = MutableLiveData<FirebaseUser?>(firebaseAuth.currentUser)
     val currentUser: LiveData<FirebaseUser?>
@@ -45,27 +51,29 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     fun fetchLastWatchedResults() {
         currentUser.value?.let { user ->
             val userDocumentReference = db.collection("Users").document(user.uid)
-            userDocumentReference.collection("watchHistory")
-                .get()
-                .addOnSuccessListener { documents ->
-                    val results = mutableListOf<RecipeResult>()
-                    for (document in documents) {
-                        val result = document.toObject(RecipeResult::class.java)
-                       if (!isRecipeResultExists(result.id,results)) {
-                           results.add(result)
-                       }
-                    }
-                    _lastWatchedLiveData.value = results
-                    Log.d("lastWatchedFill","_lastWatchedLiveData List -> ${lastWatchedLiveData.value?.size}")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("FETCH_LAST_WATCHED", "Error fetching last watched results", e)
-                }
-        }
-    }
+            val watchHistoryReference = userDocumentReference.collection("watchHistory")
 
-    private fun isRecipeResultExists(recipeId: Int?,results: MutableList<RecipeResult>): Boolean {
-        return results.any { it.id == recipeId }
+            listenerRegistration = watchHistoryReference.addSnapshotListener { querySnapshot, error ->
+                if (error != null) {
+                    Log.e("Firestore Error", "Listen failed", error)
+                    return@addSnapshotListener
+                }
+
+                val updatedList = mutableListOf<RecipeResult>()
+
+                for (document in querySnapshot!!.documents) {
+                    val recipeResult = RecipeResult.fromFirestoreData(document.data!!)
+
+                    if (document.id != recipeResult.id.toString()) {
+                        updatedList.add(recipeResult)
+                    }
+                }
+
+                val distinctList = updatedList.distinctBy { it.id }
+
+                _lastWatchedLiveData.value = distinctList.sortedBy { it.lastWatched }
+            }
+        }
     }
 
     private suspend fun signInWithEmailAndPasswordAsync(email: String, password: String): AuthResult {
