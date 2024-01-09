@@ -54,6 +54,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             val watchHistoryReference = userDocumentReference.collection("watchHistory")
 
             listenerRegistration = watchHistoryReference.addSnapshotListener { querySnapshot, error ->
+
                 if (error != null) {
                     Log.e("Firestore Error", "Listen failed", error)
                     return@addSnapshotListener
@@ -64,14 +65,47 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 for (document in querySnapshot!!.documents) {
                     val recipeResult = RecipeResult.fromFirestoreData(document.data!!)
 
-                    if (document.id != recipeResult.id.toString()) {
-                        updatedList.add(recipeResult)
-                    }
+                    updatedList.add(recipeResult)
                 }
+
+                removeDuplicateWatchHistoryIds()
 
                 val distinctList = updatedList.distinctBy { it.id }
 
                 _lastWatchedLiveData.value = distinctList.sortedBy { it.lastWatched }
+
+                }
+            }
+        }
+
+            private fun removeDuplicateWatchHistoryIds() {
+                currentUser.value?.let { user ->
+                    val userDocumentReference = db.collection("Users").document(user.uid)
+                    val watchHistoryReference = userDocumentReference.collection("watchHistory")
+
+                    // recipeToWatchHistoryMap sorgt dafür,
+                    // dass jede RecipeID durch die gesammte DocumentReferenz verglichen werden kann.
+                    val recipeToWatchHistoryMap = mutableMapOf<Int, MutableList<String>>()
+
+                    watchHistoryReference.get().addOnSuccessListener { querySnapshot ->
+
+                        for (document in querySnapshot) {
+                            //Durch den QuerySnapshot bekommen wir unsere RecipeID
+                            val recipeResult = RecipeResult.fromFirestoreData(document.data)
+                            // Default-Wert ist bei getOrPut eine Leere Liste { mutableListOf() }
+                            // somit gibt es eine Leere Liste zurück wenn die RecipeID nicht existiert.
+                            recipeToWatchHistoryMap.getOrPut(recipeResult.id!!) { mutableListOf() }.add(document.id)
+                        }
+                        for ((_, watchHistoryIds) in recipeToWatchHistoryMap) {
+                            if (watchHistoryIds.size > 1) {  // Wenn es Dublikate gibt für die RecipeID,
+                                // behalte ich die erste WatchHistoryID und lösche die restlichen.
+                                for (i in 1 until watchHistoryIds.size) {
+                                    //Hierdurch iterieren wir dann durch die Gesamte Referenz,
+                                    // um das dublizierte RecipeID Element zu löschen
+                                    watchHistoryReference.document(watchHistoryIds[i]).delete()
+                        }
+                    }
+                }
             }
         }
     }
