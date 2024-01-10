@@ -7,9 +7,10 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.SetOptions
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
-import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -17,8 +18,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -66,6 +65,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     val recipeResult = RecipeResult.fromFirestoreData(document.data!!)
 
                     updatedList.add(recipeResult)
+
                 }
 
                 removeDuplicateWatchHistoryIds()
@@ -86,6 +86,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     // recipeToWatchHistoryMap sorgt dafür,
                     // dass jede RecipeID durch die gesammte DocumentReferenz verglichen werden kann.
                     val recipeToWatchHistoryMap = mutableMapOf<Int, MutableList<String>>()
+
 
                     watchHistoryReference.get().addOnSuccessListener { querySnapshot ->
 
@@ -109,6 +110,53 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
+
+    fun updateLastWatchedForRecipe(recipeId: Int) {
+
+        currentUser.value?.let { user ->
+            val userDocumentReference = db.collection("Users").document(user.uid)
+            Log.d("CheckUser", "User data: ${user.uid}")
+            val watchHistoryReference = userDocumentReference.collection("watchHistory")
+            Log.d("CheckWHistory", "History data: ${userDocumentReference.id}")
+
+            watchHistoryReference.addSnapshotListener { snapShot, e ->
+                if (e != null) {
+                    Log.w("SnapFail", "Listen failed", e)
+                    return@addSnapshotListener
+                }
+                if (snapShot != null) {
+                    Log.d("GoodSnap", "Current data: ${snapShot.documents}")
+                    val currentTimestamp = Timestamp.now()
+                    watchHistoryReference.document(recipeId.toString()).update("lastWatched", currentTimestamp.toDate())
+                        .addOnSuccessListener {
+                            Log.d("UpdateSuccess", "Successfully update with ID: $recipeId, and ${currentTimestamp.toDate()}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("UpdateFailure", "Error updating lastWatched for recipe with ID: $recipeId", e)
+                        }
+                } else {
+                    Log.d("GoodSnap", "Current data: null")
+                }
+            }
+
+//            watchHistoryReference.document(recipeId).get().addOnSuccessListener { snapShot ->
+//                Log.d("AddOnFailure1", "snapShotChecker data: ${snapShot.data}")
+//                if (snapShot.exists()) {
+//                    watchHistoryReference.get()
+//                    val currenTimestamp = Timestamp.now()
+//                    Log.d("CheckTimeTime", "Time data: ${currenTimestamp}")
+//                    Log.d("snapShotExist", "Snap data: ${snapShot.exists()}")
+//
+//
+//                    watchHistoryReference.document(recipeId).update("lastWatched",currenTimestamp.toString())
+//                }
+//            }.addOnFailureListener {
+//                Log.d("AddOnFailure2", "History data: ${userDocumentReference.id}")
+//            }
+
+        }
+    }
+
 
     private suspend fun signInWithEmailAndPasswordAsync(email: String, password: String): AuthResult {
         return suspendCoroutine { continuation ->

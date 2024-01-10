@@ -84,7 +84,7 @@ class RecipeResultAdapter(
                 viewModel.getImageUrlForRecipeId(recipeData.id)
                 viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
                 firebaseViewModel.saveLastWatchedResult(recipeData)
-
+            firebaseViewModel.updateLastWatchedForRecipe(recipeData.id)
         }
     }
 
