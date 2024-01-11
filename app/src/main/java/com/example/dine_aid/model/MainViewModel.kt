@@ -15,9 +15,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.dine_aid.R
 import com.example.dine_aid.UI.ModalBottomSheet
 import com.example.dine_aid.data.RecipeResult
+import com.example.dine_aid.databinding.LoginScreenBinding
 import com.example.dine_aid.remote.RecipeApiService
 import com.example.dine_aid.remote.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -87,9 +92,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateLastWatchedForRecipe() {
-        // Aktualisieren Sie den Zeitstempel für das angegebene Rezept
-    }
 
     fun loadRecipeInfo(recipeID: Int) {
         try {
