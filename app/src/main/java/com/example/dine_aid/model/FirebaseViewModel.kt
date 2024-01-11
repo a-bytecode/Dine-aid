@@ -112,7 +112,9 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun updateLastWatchedForRecipe(recipeId: Int) {
-
+        // Der Codeabschnitt ist im Moment redundant,
+        // da der SnapShotListener nicht auf die Recipe ID zugreifen kann,
+        // im Firestore ist diese als Integer deklariert da die Funktion .update nur einen String nimmt.
         currentUser.value?.let { user ->
             val userDocumentReference = db.collection("Users").document(user.uid)
             Log.d("CheckUser", "User data: ${user.uid}")
@@ -138,22 +140,6 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     Log.d("GoodSnap", "Current data: null")
                 }
             }
-
-//            watchHistoryReference.document(recipeId).get().addOnSuccessListener { snapShot ->
-//                Log.d("AddOnFailure1", "snapShotChecker data: ${snapShot.data}")
-//                if (snapShot.exists()) {
-//                    watchHistoryReference.get()
-//                    val currenTimestamp = Timestamp.now()
-//                    Log.d("CheckTimeTime", "Time data: ${currenTimestamp}")
-//                    Log.d("snapShotExist", "Snap data: ${snapShot.exists()}")
-//
-//
-//                    watchHistoryReference.document(recipeId).update("lastWatched",currenTimestamp.toString())
-//                }
-//            }.addOnFailureListener {
-//                Log.d("AddOnFailure2", "History data: ${userDocumentReference.id}")
-//            }
-
         }
     }
 
