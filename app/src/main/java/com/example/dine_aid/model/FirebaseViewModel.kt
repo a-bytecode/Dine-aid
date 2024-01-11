@@ -3,13 +3,15 @@ package com.example.dine_aid.model
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.SetOptions
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -23,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.logging.Handler
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -143,7 +146,6 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-
     private suspend fun signInWithEmailAndPasswordAsync(email: String, password: String): AuthResult {
         return suspendCoroutine { continuation ->
             firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -152,37 +154,34 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                         continuation.resume(task.result!!)
                     } else {
                         continuation.resumeWithException(task.exception!!)
+                        Log.d("taskEnabled", "E-Mail existiert bereits")
                     }
                 }
         }
     }
 
-    fun createAccountIfEmailNotExists(email: String, password: String,context: Context, binding: LoginScreenBinding) {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    try {
-                        signInWithEmailAndPasswordAsync(email, password)
-                    Log.d("taskEnabled", "E-Mail existiert bereits")
+//    fun createAccountIfEmailNotExists(email: String, password: String,context: Context, binding: LoginScreenBinding) {
+//        CoroutineScope(Dispatchers.Main).launch {
+//            try {
+//                withContext(Dispatchers.IO) {
+//                    try {
+//                        signInWithEmailAndPasswordAsync(email, password)
+//                        Log.d("taskEnabled", "E-Mail existiert bereits")
+//                        visibilityRegulator(binding)
+//                } catch (e : FirebaseAuthException) {
+//                    Log.d("taskEnabled", "E-Mail existiert nicht, Account wird erstellt")
+//                    createAccount(email, password, context)
+//                }
+//            }
+//        } catch (e: Exception) {
+//                Log.e("CoroutineException", "Error in Coroutine: ${e.message}")
+//            }
+//        }
+//    }
 
-                    binding.existTVCardView.alpha = 1.0f
-                    binding.existTV.alpha = 1.0f
-                    delay(4000)
-                    binding.existTVCardView.alpha = 0.0f
-                    binding.existTV.alpha = 0.0f
-                    Log.d("taskEnabled", "Task wird nicht ausgeführt1")
-                } catch (e : FirebaseAuthException) {
-                    Log.d("taskEnabled", "E-Mail existiert nicht, Account wird erstellt")
-                    createAccount(email, password, context)
-                }
-            }
-        } catch (e: Exception) {
-                Log.e("CoroutineException", "Error in Coroutine: ${e.message}")
-            }
-        }
-    }
 
-    private fun createAccount(email: String, password: String, context: Context) {
+
+    fun createAccount(email: String, password: String, context: Context,binding: LoginScreenBinding) {
         firebaseAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -193,10 +192,11 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                     "Account created $email",
                     Toast.LENGTH_SHORT)
                     .show()
-                Log.d("SAVE_TO_DATABASE",
-                    "saveUserToDatabase executed successfully -> ${task.result}")
             } else {
-                Log.d("NOSUCCESS", "task is not succesful -> $task")
+                Toast.makeText(context,
+                    "${task.exception?.message}",
+                    Toast.LENGTH_SHORT).show()
+                task.exception?.message?.let { visibilityRegulator(binding, it) }
             }
         }
             .addOnFailureListener { e ->
@@ -204,20 +204,29 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             }
     }
 
-    fun loginAccount(email: String,password: String,context: Context) {
+    fun visibilityRegulator(binding: LoginScreenBinding,task: String) {
+        binding.existTVCardView.visibility = View.VISIBLE
+        binding.existTV.text = task
+        val handler = android.os.Handler()
+        handler.postDelayed({
+            binding.existTVCardView.visibility = View.GONE
+        }, 4000) // 4 Sekunden (4000 Millisekunden)
+    }
+
+    fun loginAccount(email: String,password: String,context: Context,binding: LoginScreenBinding) {
         firebaseAuth.signInWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _currentUserType.value = MainViewModel.AuthType.LOGIN
                     _currentUser.value = firebaseAuth.currentUser
-
                     Log.d("LOGIN_SUCCESS", "Login success", task.exception)
                 } else {
-                    Log.d("LOGIN_FAILURE", "Login failed", task.exception)
                     Toast.makeText(context,
-                        "Login Failed",
+                        task.exception?.message,
                         Toast.LENGTH_SHORT)
                         .show()
+                    task.exception?.message?.let { visibilityRegulator(binding, it) }
+
                 }
             }
     }

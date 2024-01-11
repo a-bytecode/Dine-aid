@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
@@ -37,9 +36,6 @@ class Login_Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        binding.existTVCardView.alpha = 0.0f
-        binding.existTV.alpha = 0.0f
-
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 when (firebaseViewModel.currentUserType.value) {
@@ -63,6 +59,8 @@ class Login_Fragment : Fragment() {
             }
         }
 
+        val failMessage = "Please enter both email and password"
+
         viewModel.authType.observe(viewLifecycleOwner) { authType ->
 
             when(authType) {
@@ -70,21 +68,23 @@ class Login_Fragment : Fragment() {
 
                     binding.loginbtng.setOnClickListener {
                         Log.d("isCLicked", "before input")
-                        val emailInput = binding.editTextTextEmailAddress.text.toString()
-                        val pwdInput = binding.editTextTextPassword.text.toString()
+                        val emailInput = binding.editTextEmailAddress.text.toString()
+                        val pwdInput = binding.editTextPassword.text.toString()
                         Log.d("isCLicked", "after input")
 
                         if (emailInput.isNotEmpty() && pwdInput.isNotEmpty()) {
-                            firebaseViewModel.createAccountIfEmailNotExists(
-                                emailInput,
-                                pwdInput,
-                                requireContext(),
-                                binding
-                            )
+//                            firebaseViewModel.createAccountIfEmailNotExists(
+//                                emailInput,
+//                                pwdInput,
+//                                requireContext(),
+//                                binding
+//                            )
+                            firebaseViewModel.createAccount(emailInput,pwdInput,requireContext(),binding)
                         } else {
-                            Toast.makeText(requireContext(),"Sign In Failed",
+                            Toast.makeText(requireContext(),failMessage,
                                 Toast.LENGTH_SHORT
                             ).show()
+                            firebaseViewModel.visibilityRegulator(binding,failMessage)
                         }
                     }
                     binding.loginHeader2.setOnClickListener {
@@ -98,16 +98,23 @@ class Login_Fragment : Fragment() {
                 }
                 MainViewModel.AuthType.LOGIN -> {
 
-                    binding.existTV.alpha = 0.0f
-
                     binding.loginbtng.setOnClickListener {
 
-                        val emailInput = binding.editTextTextEmailAddress.text.toString()
-                        val pwdInput = binding.editTextTextPassword.text.toString()
+                        val emailInput = binding.editTextEmailAddress.text.toString()
+                        val pwdInput = binding.editTextPassword.text.toString()
 
                         if (emailInput.isNotEmpty() && pwdInput.isNotEmpty()) {
-                            firebaseViewModel.loginAccount(emailInput,pwdInput,requireContext())
-                            Log.d("LoggingC", "Login/Sign-In was not Accepted to $emailInput")
+                            firebaseViewModel.loginAccount(
+                                emailInput,
+                                pwdInput,
+                                requireContext(),
+                                binding
+                            )
+                        } else {
+                            Toast.makeText(requireContext(),failMessage,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            firebaseViewModel.visibilityRegulator(binding,failMessage)
                         }
                     }
                     binding.loginHeader2.setOnClickListener {

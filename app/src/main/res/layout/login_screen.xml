@@ -33,7 +33,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/existtvcolor"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/loginbtng"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,14 +46,16 @@
 
                 <TextView
                     android:id="@+id/existTV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:fontFamily="sans-serif"
                     android:text="The email address is already in use by another account."
+                    android:textAlignment="center"
                     android:textColor="#FF0000"
-                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +100,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/login_header">
 
                     <EditText
-                        android:id="@+id/editTextTextEmailAddress"
+                        android:id="@+id/edit_text_email_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"
@@ -131,7 +133,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
 
                     <EditText
-                        android:id="@+id/editTextTextPassword"
+                        android:id="@+id/editTextPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Password"
