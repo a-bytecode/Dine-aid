@@ -2,33 +2,22 @@ package com.example.dine_aid.model
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dine_aid.R
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
-import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.logging.Handler
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class FirebaseViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -48,6 +37,8 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
     private val _lastWatchedLiveData = MutableLiveData<List<RecipeResult>>()
     val lastWatchedLiveData : LiveData<List<RecipeResult>> = _lastWatchedLiveData
+
+    private var accIsCreated = false
 
 
     fun fetchLastWatchedResults() {
@@ -115,6 +106,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun updateLastWatchedForRecipe(recipeId: Int) {
+        // ***! WICHTIG !***
         // Der Codeabschnitt ist im Moment redundant,
         // da der SnapShotListener nicht auf die Recipe ID zugreifen kann,
         // im Firestore ist diese als Integer deklariert da die Funktion .update nur einen String nimmt.
@@ -146,53 +138,22 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private suspend fun signInWithEmailAndPasswordAsync(email: String, password: String): AuthResult {
-        return suspendCoroutine { continuation ->
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        continuation.resume(task.result!!)
-                    } else {
-                        continuation.resumeWithException(task.exception!!)
-                        Log.d("taskEnabled", "E-Mail existiert bereits")
-                    }
-                }
-        }
-    }
-
-//    fun createAccountIfEmailNotExists(email: String, password: String,context: Context, binding: LoginScreenBinding) {
-//        CoroutineScope(Dispatchers.Main).launch {
-//            try {
-//                withContext(Dispatchers.IO) {
-//                    try {
-//                        signInWithEmailAndPasswordAsync(email, password)
-//                        Log.d("taskEnabled", "E-Mail existiert bereits")
-//                        visibilityRegulator(binding)
-//                } catch (e : FirebaseAuthException) {
-//                    Log.d("taskEnabled", "E-Mail existiert nicht, Account wird erstellt")
-//                    createAccount(email, password, context)
-//                }
-//            }
-//        } catch (e: Exception) {
-//                Log.e("CoroutineException", "Error in Coroutine: ${e.message}")
-//            }
-//        }
-//    }
-
-
-
     fun createAccount(email: String, password: String, context: Context,binding: LoginScreenBinding) {
         firebaseAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                accIsCreated = true
+                val accountCreatedText = "Account created $email"
                 _currentUserType.value = MainViewModel.AuthType.SIGN_IN
                 _currentUser.value = firebaseAuth.currentUser
                 saveUserToDatabaseNoRecipeResult(_currentUser.value)
                 Toast.makeText(context,
-                    "Account created $email",
+                    accountCreatedText,
                     Toast.LENGTH_SHORT)
                     .show()
+                visibilityRegulator(binding, accountCreatedText)
             } else {
+                accIsCreated = false
                 Toast.makeText(context,
                     "${task.exception?.message}",
                     Toast.LENGTH_SHORT).show()
@@ -205,12 +166,27 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun visibilityRegulator(binding: LoginScreenBinding,task: String) {
-        binding.existTVCardView.visibility = View.VISIBLE
-        binding.existTV.text = task
-        val handler = android.os.Handler()
-        handler.postDelayed({
-            binding.existTVCardView.visibility = View.GONE
-        }, 4000) // 4 Sekunden (4000 Millisekunden)
+        if (!accIsCreated) {
+            Log.d("accCreated","${accIsCreated}")
+            binding.constraintExistCV.setBackgroundResource(R.drawable.existtvcolor)
+            binding.existTV.setTextColor(Color.RED)
+            binding.existTVCardView.visibility = View.VISIBLE
+            binding.existTV.text = task
+            val handler = android.os.Handler()
+            handler.postDelayed({
+                binding.existTVCardView.visibility = View.GONE
+            }, 4000)
+        } else {
+            Log.d("accCreated","${accIsCreated}")
+            binding.existTVCardView.visibility = View.VISIBLE
+            binding.constraintExistCV.setBackgroundResource(R.drawable.existtvcolor2)
+            binding.existTV.setTextColor(Color.GREEN)
+            binding.existTV.text = task
+            val handler = android.os.Handler()
+            handler.postDelayed({
+                binding.existTVCardView.visibility = View.GONE
+            }, 4000)
+        }
     }
 
     fun loginAccount(email: String,password: String,context: Context,binding: LoginScreenBinding) {
