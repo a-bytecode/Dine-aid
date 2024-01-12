@@ -142,6 +142,16 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         firebaseAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                firebaseAuth.currentUser?.let { user ->
+                    user.sendEmailVerification()
+                        .addOnCompleteListener { verifiationTask ->
+                            if (verifiationTask.isSuccessful) {
+                                Log.e("EmailSend","task is succesufull ${verifiationTask.isSuccessful}")
+                            } else {
+                                Log.e("EmailSend","task is not succesfull ${verifiationTask.isSuccessful}")
+                            }
+                        }
+                }
                 accIsCreated = true
                 val accountCreatedText = "Account created $email"
                 _currentUserType.value = MainViewModel.AuthType.SIGN_IN
@@ -202,7 +212,6 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                         Toast.LENGTH_SHORT)
                         .show()
                     task.exception?.message?.let { visibilityRegulator(binding, it) }
-
                 }
             }
     }
