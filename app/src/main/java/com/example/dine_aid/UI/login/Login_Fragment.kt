@@ -36,6 +36,8 @@ class Login_Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        val failMessage = "Please enter both email and password"
+
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 when (firebaseViewModel.currentUserType.value) {
@@ -59,27 +61,25 @@ class Login_Fragment : Fragment() {
             }
         }
 
-        val failMessage = "Please enter both email and password"
-
         viewModel.authType.observe(viewLifecycleOwner) { authType ->
 
             when(authType) {
                 MainViewModel.AuthType.SIGN_IN -> {
 
                     binding.loginbtng.setOnClickListener {
-                        Log.d("isCLicked", "before input")
+
                         val emailInput = binding.editTextEmailAddress.text.toString()
                         val pwdInput = binding.editTextPassword.text.toString()
-                        Log.d("isCLicked", "after input")
 
                         if (emailInput.isNotEmpty() && pwdInput.isNotEmpty()) {
-//                            firebaseViewModel.createAccountIfEmailNotExists(
-//                                emailInput,
-//                                pwdInput,
-//                                requireContext(),
-//                                binding
-//                            )
-                            firebaseViewModel.createAccount(emailInput,pwdInput,requireContext(),binding)
+
+                            firebaseViewModel.createAccount(
+                                emailInput,
+                                pwdInput,
+                                requireContext(),
+                                binding
+                            )
+
                         } else {
                             Toast.makeText(requireContext(),failMessage,
                                 Toast.LENGTH_SHORT
