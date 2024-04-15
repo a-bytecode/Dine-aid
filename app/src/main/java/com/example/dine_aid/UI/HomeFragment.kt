@@ -1,13 +1,18 @@
 package com.example.dine_aid.UI
 
+import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -19,6 +24,10 @@ import com.example.dine_aid.databinding.HomeFragmentBinding
 import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.example.dine_aid.UI.login.Login_Fragment
 
 class HomeFragment : Fragment() {
 
@@ -40,6 +49,9 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
+        val firebaseViewModel = FirebaseViewModel(Application())
 
         val recipeResultAdapter = RecipeResultAdapter(
             requireContext(),
@@ -113,7 +125,48 @@ class HomeFragment : Fragment() {
         })
 
 
+        @RequiresApi(Build.VERSION_CODES.Q)
+        fun showPopUpMenu(view: View) {
+            val popupMenu = PopupMenu(requireContext(), view)
 
+            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+
+                    R.id.pop_up_fav_home -> {
+                        // TODO: Favoriten Screen Verbinden
+                        true
+                    }
+
+                    R.id.pop_up_deleteAll_home -> {
+                        // TODO: Delete Funktion aus der Firebase Datenank löschen.
+                        true
+                    }
+
+                    R.id.pop_up_end_home -> {
+                        // TODO: Alert Dialog aufrufen und App Beenden Funktion implementierencheck_navigation
+                        true
+                    }
+
+                    R.id.pop_up_logout_home -> {
+                        firebaseViewModel.logoutAccount()
+                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(
+                            R.id.fragmentContainerView) as NavHostFragment
+                        val navController = navHostFragment.navController
+                        navController.navigate(R.id.login_Fragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
+        }
+
+        binding.menuIV.setOnClickListener {
+            // TODO: Hier brauchen wir das Pop Up Menu.
+            showPopUpMenu(it)
+        }
 
         binding.arrowUpIV.setOnClickListener {
 
