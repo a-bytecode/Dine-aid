@@ -216,6 +216,10 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             }
     }
 
+    fun logoutAccount() {
+        firebaseAuth.signOut()
+    }
+
     private fun saveUserToDatabase(user: FirebaseUser?,recipeResult: RecipeResult?) {
 
         if (user != null) {
