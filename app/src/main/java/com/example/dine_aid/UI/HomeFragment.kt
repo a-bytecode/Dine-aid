@@ -2,9 +2,11 @@ package com.example.dine_aid.UI
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +27,7 @@ import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.example.dine_aid.MainActivity
 
 class HomeFragment : Fragment() {
 
@@ -42,9 +45,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = HomeFragmentBinding.inflate(inflater)
-
         navController = findNavController()
+
+        binding = HomeFragmentBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -53,12 +56,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val firebaseViewModel = FirebaseViewModel(Application())
-
-        firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
-            if (user == null) {
-                findNavController().navigate(R.id.login_Fragment)
-            }
-        }
 
         val recipeResultAdapter = RecipeResultAdapter(
             requireContext(),
@@ -199,6 +196,7 @@ class HomeFragment : Fragment() {
             popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
 
             popupMenu.setOnMenuItemClickListener {
+
                 when (it.itemId) {
 
                     R.id.pop_up_fav_home -> {
@@ -207,12 +205,10 @@ class HomeFragment : Fragment() {
                             R.id.fragmentContainerView) as NavHostFragment
                         val navController = navHostFragment.navController
                         navController.navigate(R.id.test_Fragment)
-
                     }
 
                     R.id.pop_up_deleteAll_home -> {
                         // TODO: Delete Funktion aus der Firebase Datenank löschen.
-
                     }
 
                     R.id.pop_up_end_home -> {
@@ -220,11 +216,13 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_logout_home -> {
-//                        firebaseViewModel.logoutAccount()
-                        viewModel.navigationBetweenFragments(
-                            navController,
-                            R.id.login_Fragment
-                        )
+                        firebaseViewModel.logoutAccount()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK)
+                        requireContext().startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
                 true
@@ -232,16 +230,22 @@ class HomeFragment : Fragment() {
             popupMenu.show()
         } else {
 
-            val popupMenu = PopupMenu(requireContext(), view)
+            val wrapper = ContextThemeWrapper(requireContext(),R.style.popupMenuStyle)
+            val popupMenu = PopupMenu(wrapper, view)
+            val inflater = popupMenu.menuInflater
 
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+            inflater.inflate(R.menu.popup_menu,popupMenu.menu)
+
             popupMenu.menu.findItem(R.id.pop_up_fav_home).setIcon(R.drawable.baseline_favorite_24)
             popupMenu.menu.findItem(R.id.pop_up_deleteAll_home).setIcon(R.drawable.baseline_delete_24)
             popupMenu.menu.findItem(R.id.pop_up_logout_home).setIcon(R.drawable.baseline_dangerous_24)
             popupMenu.menu.findItem(R.id.pop_up_end_home).setIcon(R.drawable.baseline_exit_to_app_24)
 
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
+            popupMenu.setForceShowIcon(true)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+
+                when (menuItem.itemId) {
 
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
@@ -262,11 +266,13 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_logout_home -> {
-//                        firebaseViewModel.logoutAccount()
-                        viewModel.navigationBetweenFragments(
-                            navController,
-                            R.id.login_Fragment
-                        )
+                        firebaseViewModel.logoutAccount()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK)
+                        requireContext().startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
                 true

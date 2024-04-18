@@ -37,12 +37,13 @@ class Login_Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
-
-            if (user != null) {
-                val options = NavOptions.Builder()
-                    .setEnterAnim(R.anim.slide_in_left)
-                    .build()
-                findNavController().navigate(R.id.homeFragment, null, options)
+            if (user == null &&
+                findNavController().currentDestination?.id != R.id.login_Fragment) {
+                findNavController().navigate(R.id.login_Fragment)
+            }
+            else if (user != null &&
+                findNavController().currentDestination?.id != R.id.homeFragment) {
+                findNavController().navigate(R.id.homeFragment)
             }
         }
 
@@ -50,6 +51,9 @@ class Login_Fragment : Fragment() {
 
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
+
+                Log.d("LoginFUserCheck","$user ist er eingeoggt ?")
+
                 when (firebaseViewModel.currentUserType.value) {
                     MainViewModel.AuthType.LOGIN -> {
 
