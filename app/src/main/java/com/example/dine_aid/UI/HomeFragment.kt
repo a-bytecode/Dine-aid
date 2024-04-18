@@ -2,6 +2,7 @@ package com.example.dine_aid.UI
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +26,7 @@ import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.example.dine_aid.MainActivity
 
 class HomeFragment : Fragment() {
 
@@ -42,9 +44,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = HomeFragmentBinding.inflate(inflater)
-
         navController = findNavController()
+
+        binding = HomeFragmentBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -53,12 +55,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val firebaseViewModel = FirebaseViewModel(Application())
-
-        firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
-            if (user == null) {
-                findNavController().navigate(R.id.login_Fragment)
-            }
-        }
 
         val recipeResultAdapter = RecipeResultAdapter(
             requireContext(),
@@ -199,6 +195,7 @@ class HomeFragment : Fragment() {
             popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
 
             popupMenu.setOnMenuItemClickListener {
+
                 when (it.itemId) {
 
                     R.id.pop_up_fav_home -> {
@@ -220,11 +217,13 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_logout_home -> {
-//                        firebaseViewModel.logoutAccount()
-                        viewModel.navigationBetweenFragments(
-                            navController,
-                            R.id.login_Fragment
-                        )
+                        firebaseViewModel.logoutAccount()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK)
+                        requireContext().startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
                 true
@@ -240,8 +239,9 @@ class HomeFragment : Fragment() {
             popupMenu.menu.findItem(R.id.pop_up_logout_home).setIcon(R.drawable.baseline_dangerous_24)
             popupMenu.menu.findItem(R.id.pop_up_end_home).setIcon(R.drawable.baseline_exit_to_app_24)
 
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+
+                when (menuItem.itemId) {
 
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
@@ -262,11 +262,13 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_logout_home -> {
-//                        firebaseViewModel.logoutAccount()
-                        viewModel.navigationBetweenFragments(
-                            navController,
-                            R.id.login_Fragment
-                        )
+                        firebaseViewModel.logoutAccount()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK)
+                        requireContext().startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
                 true
