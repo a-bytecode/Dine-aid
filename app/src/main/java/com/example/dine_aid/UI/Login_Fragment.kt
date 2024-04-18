@@ -37,9 +37,12 @@ class Login_Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
-            if (user == null && findNavController().currentDestination?.id != R.id.login_Fragment) {
+            if (user == null &&
+                findNavController().currentDestination?.id != R.id.login_Fragment) {
                 findNavController().navigate(R.id.login_Fragment)
-            } else if (user != null && findNavController().currentDestination?.id != R.id.homeFragment) {
+            }
+            else if (user != null &&
+                findNavController().currentDestination?.id != R.id.homeFragment) {
                 findNavController().navigate(R.id.homeFragment)
             }
         }

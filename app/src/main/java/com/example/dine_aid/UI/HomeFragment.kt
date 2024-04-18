@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -204,12 +205,10 @@ class HomeFragment : Fragment() {
                             R.id.fragmentContainerView) as NavHostFragment
                         val navController = navHostFragment.navController
                         navController.navigate(R.id.test_Fragment)
-
                     }
 
                     R.id.pop_up_deleteAll_home -> {
                         // TODO: Delete Funktion aus der Firebase Datenank löschen.
-
                     }
 
                     R.id.pop_up_end_home -> {
@@ -231,13 +230,18 @@ class HomeFragment : Fragment() {
             popupMenu.show()
         } else {
 
-            val popupMenu = PopupMenu(requireContext(), view)
+            val wrapper = ContextThemeWrapper(requireContext(),R.style.popupMenuStyle)
+            val popupMenu = PopupMenu(wrapper, view)
+            val inflater = popupMenu.menuInflater
 
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+            inflater.inflate(R.menu.popup_menu,popupMenu.menu)
+
             popupMenu.menu.findItem(R.id.pop_up_fav_home).setIcon(R.drawable.baseline_favorite_24)
             popupMenu.menu.findItem(R.id.pop_up_deleteAll_home).setIcon(R.drawable.baseline_delete_24)
             popupMenu.menu.findItem(R.id.pop_up_logout_home).setIcon(R.drawable.baseline_dangerous_24)
             popupMenu.menu.findItem(R.id.pop_up_end_home).setIcon(R.drawable.baseline_exit_to_app_24)
+
+            popupMenu.setForceShowIcon(true)
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
 
