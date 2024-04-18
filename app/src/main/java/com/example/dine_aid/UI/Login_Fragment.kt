@@ -1,4 +1,4 @@
-package com.example.dine_aid.UI.login
+package com.example.dine_aid.UI
 
 import android.os.Bundle
 import android.util.Log
@@ -36,6 +36,16 @@ class Login_Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
+
+            if (user != null) {
+                val options = NavOptions.Builder()
+                    .setEnterAnim(R.anim.slide_in_left)
+                    .build()
+                findNavController().navigate(R.id.homeFragment, null, options)
+            }
+        }
+
         val failMessage = "Please enter both email and password"
 
         firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
@@ -48,6 +58,7 @@ class Login_Fragment : Fragment() {
                             .build()
 
                         findNavController().navigate(R.id.homeFragment,null, options)
+
                     }
                     MainViewModel.AuthType.SIGN_IN -> {
                         Log.d("SignInA","SignIn was not Accepted to $user")

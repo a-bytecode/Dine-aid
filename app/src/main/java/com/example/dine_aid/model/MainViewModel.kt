@@ -12,6 +12,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import com.example.dine_aid.R
 import com.example.dine_aid.UI.ModalBottomSheet
 import com.example.dine_aid.data.RecipeResult
@@ -182,5 +184,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun toggleSearchState(isSearching : Boolean) {
        _isSearching.value = isSearching
         Log.d("booleanTrigger", "$isSearching")
+    }
+
+    fun navigationBetweenFragments(navController: NavController,destinationID: Int) {
+        navController.navigate(destinationID)
     }
 }

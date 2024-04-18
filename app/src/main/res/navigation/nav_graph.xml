@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/nav_graph"
-    app:startDestination="@id/login_Fragment">
+    app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.dine_aid.UI.HomeFragment"
@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_homeFragment_to_bottomSheetFragment"
             app:destination="@id/bottomSheetFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_test_Fragment"
+            app:destination="@id/test_Fragment" />
         <action
             android:id="@+id/action_homeFragment_to_login_Fragment"
             app:destination="@id/login_Fragment" />
@@ -24,8 +27,12 @@
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
+        android:id="@+id/test_Fragment"
+        android:name="com.example.dine_aid.UI.Test_Fragment"
+        android:label="Test_Fragment" />
+    <fragment
         android:id="@+id/login_Fragment"
-        android:name="com.example.dine_aid.UI.login.Login_Fragment"
+        android:name="com.example.dine_aid.UI.Login_Fragment"
         android:label="Login_Fragment" >
         <action
             android:id="@+id/action_login_Fragment_to_homeFragment"

@@ -5,11 +5,9 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
@@ -24,10 +22,9 @@ import com.example.dine_aid.databinding.HomeFragmentBinding
 import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
-import androidx.navigation.NavOptions
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import com.example.dine_aid.UI.login.Login_Fragment
 
 class HomeFragment : Fragment() {
 
@@ -37,6 +34,8 @@ class HomeFragment : Fragment() {
 
     private val firebaseViewModel : FirebaseViewModel by activityViewModels()
 
+    private lateinit var navController: NavController
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,13 +44,21 @@ class HomeFragment : Fragment() {
 
         binding = HomeFragmentBinding.inflate(inflater)
 
+        navController = findNavController()
+
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
         val firebaseViewModel = FirebaseViewModel(Application())
+
+        firebaseViewModel.currentUser.observe(viewLifecycleOwner) { user ->
+            if (user == null) {
+                findNavController().navigate(R.id.login_Fragment)
+            }
+        }
 
         val recipeResultAdapter = RecipeResultAdapter(
             requireContext(),
@@ -124,45 +131,6 @@ class HomeFragment : Fragment() {
             }
         })
 
-
-        @RequiresApi(Build.VERSION_CODES.Q)
-        fun showPopUpMenu(view: View) {
-            val popupMenu = PopupMenu(requireContext(), view)
-
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-
-                    R.id.pop_up_fav_home -> {
-                        // TODO: Favoriten Screen Verbinden
-                        true
-                    }
-
-                    R.id.pop_up_deleteAll_home -> {
-                        // TODO: Delete Funktion aus der Firebase Datenank löschen.
-                        true
-                    }
-
-                    R.id.pop_up_end_home -> {
-                        // TODO: Alert Dialog aufrufen und App Beenden Funktion implementierencheck_navigation
-                        true
-                    }
-
-                    R.id.pop_up_logout_home -> {
-                        firebaseViewModel.logoutAccount()
-                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(
-                            R.id.fragmentContainerView) as NavHostFragment
-                        val navController = navHostFragment.navController
-                        navController.navigate(R.id.login_Fragment)
-                        true
-                    }
-                    else -> false
-                }
-            }
-            popupMenu.show()
-        }
-
         binding.menuIV.setOnClickListener {
             // TODO: Hier brauchen wir das Pop Up Menu.
             showPopUpMenu(it)
@@ -218,6 +186,92 @@ class HomeFragment : Fragment() {
             constraintSet.applyTo(binding.activityMainConstrain)
 
             binding.recipeResultRecycler.layoutParams = layoutParams
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun showPopUpMenu(view: View) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+
+            val popupMenu = PopupMenu(requireContext(), view)
+
+            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+
+                    R.id.pop_up_fav_home -> {
+                        // TODO: Favoriten Screen Verbinden
+                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(
+                            R.id.fragmentContainerView) as NavHostFragment
+                        val navController = navHostFragment.navController
+                        navController.navigate(R.id.test_Fragment)
+
+                    }
+
+                    R.id.pop_up_deleteAll_home -> {
+                        // TODO: Delete Funktion aus der Firebase Datenank löschen.
+
+                    }
+
+                    R.id.pop_up_end_home -> {
+                        // TODO: Alert Dialog aufrufen und App Beenden Funktion implementierencheck_navigation
+                    }
+
+                    R.id.pop_up_logout_home -> {
+//                        firebaseViewModel.logoutAccount()
+                        viewModel.navigationBetweenFragments(
+                            navController,
+                            R.id.login_Fragment
+                        )
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        } else {
+
+            val popupMenu = PopupMenu(requireContext(), view)
+
+            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+            popupMenu.menu.findItem(R.id.pop_up_fav_home).setIcon(R.drawable.baseline_favorite_24)
+            popupMenu.menu.findItem(R.id.pop_up_deleteAll_home).setIcon(R.drawable.baseline_delete_24)
+            popupMenu.menu.findItem(R.id.pop_up_logout_home).setIcon(R.drawable.baseline_dangerous_24)
+            popupMenu.menu.findItem(R.id.pop_up_end_home).setIcon(R.drawable.baseline_exit_to_app_24)
+
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+
+                    R.id.pop_up_fav_home -> {
+                        // TODO: Favoriten Screen Verbinden
+                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(
+                            R.id.fragmentContainerView) as NavHostFragment
+                        val navController = navHostFragment.navController
+                        navController.navigate(R.id.test_Fragment)
+
+                    }
+
+                    R.id.pop_up_deleteAll_home -> {
+                        // TODO: Delete Funktion aus der Firebase Datenank löschen.
+
+                    }
+
+                    R.id.pop_up_end_home -> {
+                        // TODO: Alert Dialog aufrufen und App Beenden Funktion implementierencheck_navigation
+                    }
+
+                    R.id.pop_up_logout_home -> {
+//                        firebaseViewModel.logoutAccount()
+                        viewModel.navigationBetweenFragments(
+                            navController,
+                            R.id.login_Fragment
+                        )
+                    }
+                }
+                true
+            }
+            popupMenu.show()
         }
     }
 }
