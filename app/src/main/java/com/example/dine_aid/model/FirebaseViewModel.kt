@@ -10,6 +10,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dine_aid.R
+import com.example.dine_aid.UI.ModalBottomSheet.Companion.TAG
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
 import com.google.firebase.Timestamp
@@ -40,6 +41,20 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
     private var accIsCreated = false
 
+    fun deleteWatchHistory() {
+        currentUser.value?.let { user ->
+            val userDocumentReference = db.collection("Users").document(user.uid)
+            val watchHistoryReference = userDocumentReference.collection("watchHistory")
+
+            watchHistoryReference.get().addOnSuccessListener { documents ->
+                for (document in documents) {
+                    document.reference.delete()
+                }
+            }.addOnFailureListener { exeption ->
+                Log.e("FirebaseViewModel", "Fehler beim Löschen der Daten", exeption)
+            }
+        }
+    }
 
     fun fetchLastWatchedResults() {
         currentUser.value?.let { user ->
@@ -252,7 +267,6 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     private fun saveUserToDatabaseNoRecipeResult(user: FirebaseUser?) {
         saveUserToDatabase(user,null)
     }
-
 
     fun saveLastWatchedResult(recipeResult: RecipeResult) {
         // Hier wird der LastwatchResult in die Collection "watchHistory gespeichert."

@@ -194,9 +194,11 @@ class HomeFragment : Fragment() {
 
         customDialog = CustomDialog(requireContext(),requireActivity())
 
-        val closeAppDialogtxt = "Willst du die app Beenden?"
+        val closeAppDialogtxt = "Willst du die App Beenden?"
 
         val logoutDialogtxt = "Möchtest du dich Ausloggen?"
+
+        val deleteDialogtxt = "Möchtest du deine Einträge Löschen?"
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
 
@@ -217,11 +219,17 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_deleteAll_home -> {
-                        // TODO: Delete Funktion aus der Firebase Datenank löschen.
+                        customDialog.showDialog()
+                        customDialog.setTextDialog(deleteDialogtxt)
+                        customDialog.setAnswerYesAction {
+                            firebaseViewModel.deleteWatchHistory()
+                        }
                     }
 
                     R.id.pop_up_end_home -> {
-                        // TODO: Alert Dialog aufrufen und App Beenden Funktion implementierencheck_navigation
+                        customDialog.showDialog()
+                        customDialog.setTextDialog(closeAppDialogtxt)
+                        customDialog.doINeedExitApp = true
                     }
 
                     R.id.pop_up_logout_home -> {
@@ -241,6 +249,7 @@ class HomeFragment : Fragment() {
                 true
             }
             popupMenu.show()
+
         } else {
 
             val wrapper = ContextThemeWrapper(requireContext(),R.style.popupMenuStyle)
@@ -270,12 +279,19 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_deleteAll_home -> {
-                        // TODO: Delete Funktion aus der Firebase Datenank löschen.
-
+                        customDialog.showDialog()
+                        customDialog.setTextDialog(deleteDialogtxt)
+                        customDialog.setIcon(R.drawable.baseline_delete_black)
+                        customDialog.setAnswerYesAction {
+                            firebaseViewModel.deleteWatchHistory()
+                        }
                     }
 
                     R.id.pop_up_end_home -> {
-                        // TODO: Alert Dialog aufrufen und App Beenden Funktion implementierencheck_navigation
+                        customDialog.showDialog()
+                        customDialog.setTextDialog(closeAppDialogtxt)
+                        customDialog.setIcon(R.drawable.baseline_exit_to_app_black)
+                        customDialog.doINeedExitApp = true
                     }
 
                     R.id.pop_up_logout_home -> {
