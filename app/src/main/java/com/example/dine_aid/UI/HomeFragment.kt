@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.dine_aid.MainActivity
+import com.example.dine_aid.model.CustomDialog
 
 class HomeFragment : Fragment() {
 
@@ -38,6 +39,8 @@ class HomeFragment : Fragment() {
     private val firebaseViewModel : FirebaseViewModel by activityViewModels()
 
     private lateinit var navController: NavController
+
+    private lateinit var customDialog : CustomDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -189,6 +192,12 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun showPopUpMenu(view: View) {
 
+        customDialog = CustomDialog(requireContext(),requireActivity())
+
+        val closeAppDialogtxt = "Willst du die app Beenden?"
+
+        val logoutDialogtxt = "Möchtest du dich Ausloggen?"
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
 
             val popupMenu = PopupMenu(requireContext(), view)
@@ -216,13 +225,17 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_logout_home -> {
-                        firebaseViewModel.logoutAccount()
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                                Intent.FLAG_ACTIVITY_NEW_TASK)
-                        requireContext().startActivity(intent)
-                        requireActivity().finish()
+                        customDialog.showDialog()
+                        customDialog.setTextDialog(logoutDialogtxt)
+                        customDialog.setAnswerYesAction {
+                            firebaseViewModel.logoutAccount()
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK)
+                            requireContext().startActivity(intent)
+                            requireActivity().finish()
+                        }
                     }
                 }
                 true
@@ -266,13 +279,18 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_logout_home -> {
-                        firebaseViewModel.logoutAccount()
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                                Intent.FLAG_ACTIVITY_NEW_TASK)
-                        requireContext().startActivity(intent)
-                        requireActivity().finish()
+                        customDialog.showDialog()
+                        customDialog.setTextDialog(logoutDialogtxt)
+                        customDialog.setIcon(R.drawable.baseline_dangerous_black)
+                        customDialog.setAnswerYesAction {
+                            firebaseViewModel.logoutAccount()
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK)
+                            requireContext().startActivity(intent)
+                            requireActivity().finish()
+                        }
                     }
                 }
                 true

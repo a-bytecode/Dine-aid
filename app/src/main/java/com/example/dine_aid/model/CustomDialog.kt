@@ -50,21 +50,21 @@ class CustomDialog(context: Context, activity: Activity) {
         } else {
             dialog.dismiss()
         }
+    }
 
-        fun setIcon(id:Int) {
-            binding.iconDialog.setImageResource(id)
-        }
+    fun setIcon(id:Int) {
+        binding.iconDialog.setImageResource(id)
+    }
 
-        fun setAnswerYesAction(action: () -> Unit) {
-            _viewModelObserver.value = action // Hier wird die Funktion innerhalb des _ViewModel Observers durch das .invoke() aufgerufen.
-        }
+    fun setAnswerYesAction(action: () -> Unit) {
+        _viewModelObserver.value = action // Hier wird die Funktion innerhalb des _ViewModel Observers durch das .invoke() aufgerufen.
+    }
 
-        fun setTextDialog(text: String) {
-            binding.titleTextDialog.text = text
-        }
+    fun setTextDialog(text: String) {
+        binding.titleTextDialog.text = text
+    }
 
-        fun showDialog() {
-            dialog.show()
-        }
+    fun showDialog() {
+        dialog.show()
     }
 }

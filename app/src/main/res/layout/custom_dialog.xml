@@ -9,12 +9,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:backgroundTint="#00000000">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/alert_dialog_cardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
             app:cardBackgroundColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +35,9 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -45,7 +50,7 @@
                             android:id="@+id/icon_dialog"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:src="@tools:sample/avatars"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/title_text_dialog"
                             app:layout_constraintStart_toStartOf="parent"
@@ -56,29 +61,31 @@
                             android:id="@+id/title_text_dialog"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
                             android:fontFamily="sans-serif-smallcaps"
                             android:text="Daten wirklich Löschen ?"
-                            android:textAlignment="center"
                             android:textColor="#000000"
-                            android:textSize="24sp"
+                            android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="32dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -92,7 +99,7 @@
                             android:fontFamily="sans-serif-smallcaps"
                             android:text="Ja"
                             android:textColor="#000000"
-                            android:textSize="24sp"
+                            android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/answer_no"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +112,7 @@
                             android:fontFamily="sans-serif-smallcaps"
                             android:text="Nein"
                             android:textColor="#000000"
-                            android:textSize="24sp"
+                            android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
