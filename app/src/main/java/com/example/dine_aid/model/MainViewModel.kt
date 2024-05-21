@@ -186,16 +186,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         navController.navigate(destinationID)
     }
 
-    fun favoriteToggle(favIcon: ImageView, recipeResult: RecipeResult) {
+    fun favoriteToggle(recipeResult: RecipeResult) : Boolean {
 
         recipeResult.isFavorite = !recipeResult.isFavorite!!
 
-        if (recipeResult.isFavorite!!) {
-             favIcon.setColorFilter(Color.RED)
-
-        } else {
-            favIcon.setColorFilter(Color.WHITE)
-        }
+        return recipeResult.isFavorite!!
 
     }
 }
