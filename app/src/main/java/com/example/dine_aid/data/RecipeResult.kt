@@ -56,16 +56,16 @@ data class RecipeResult(
     @Json(name = "imageType")
     val imageType: String,
 
-    val isFavorite : Boolean? = false,
+    var isFavorite : Boolean? = false,
 
-    val lastAdded : String = "",
+    override val lastAdded : String = "",
 
     @Json(name="lastWatched")
     override val lastWatched: String?,
     // Das Schlüsselwort Override bekommt der Compiler erst den Bezug zum Interface,
     // es ist eine syntaktische Anforderung des Kotlin Kompilers. Es ist erforderlich Override
     // explizit anzugeben damit es die Eigenschaft aus dem Interface überschreiben kann.
-) : LastWatched {
+) : LastWatched, LastAdded {
     companion object {
         fun fromFirestoreData(data: Map<String, Any?>): RecipeResult {
             return RecipeResult(

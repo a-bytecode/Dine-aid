@@ -1,8 +1,8 @@
 package com.example.dine_aid.adapter
 
-import BottomSheetAdapter
+import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +39,7 @@ class RecipeResultAdapter(
         val image = view.findViewById<ImageView>(R.id.imageIV_item)
         val secondCardView = view.findViewById<CardView>(R.id.secondCardView)
         val clickHereCarView = view.findViewById<CardView>(R.id.clickHereToSeeMoreCardView)
-
+        val favicon = view.findViewById<ImageView>(R.id.favIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -51,6 +51,7 @@ class RecipeResultAdapter(
         return ItemViewHolder(itemLayout)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
 
         val recipeData = dataset[position]
@@ -84,7 +85,12 @@ class RecipeResultAdapter(
                 viewModel.getImageUrlForRecipeId(recipeData.id)
                 viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
                 firebaseViewModel.saveLastWatchedResult(recipeData)
-            firebaseViewModel.updateLastWatchedForRecipe(recipeData.id)
+                firebaseViewModel.updateLastWatchedForRecipe(recipeData.id)
+        }
+
+        holder.favicon.setOnClickListener {
+            viewModel.favoriteToggle(holder.favicon,recipeData)
+            notifyItemChanged(position)
         }
     }
 

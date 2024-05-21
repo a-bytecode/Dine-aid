@@ -2,10 +2,12 @@ package com.example.dine_aid.model
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
@@ -13,18 +15,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import com.example.dine_aid.R
 import com.example.dine_aid.UI.ModalBottomSheet
 import com.example.dine_aid.data.RecipeResult
-import com.example.dine_aid.databinding.LoginScreenBinding
 import com.example.dine_aid.remote.RecipeApiService
 import com.example.dine_aid.remote.Repository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -188,5 +184,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun navigationBetweenFragments(navController: NavController,destinationID: Int) {
         navController.navigate(destinationID)
+    }
+
+    fun favoriteToggle(favIcon: ImageView, recipeResult: RecipeResult) {
+
+        recipeResult.isFavorite = !recipeResult.isFavorite!!
+
+        if (recipeResult.isFavorite!!) {
+             favIcon.setColorFilter(Color.RED)
+
+        } else {
+            favIcon.setColorFilter(Color.WHITE)
+        }
+
     }
 }
