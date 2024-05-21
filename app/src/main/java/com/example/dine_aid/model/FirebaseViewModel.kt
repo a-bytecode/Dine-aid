@@ -286,6 +286,8 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             "id" to recipeResult.id,
             "title" to recipeResult.title,
             "image" to recipeResult.image,
+            "isFavorite" to recipeResult.isFavorite,
+            "lastAdded" to recipeResult.lastAdded,
             "lastWatched" to recipeResult.lastWatched
         )
 
@@ -300,10 +302,12 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         val favoritesCollection = userDocumentReference.collection("Favorites")
 
         val favoritesData = hashMapOf(
-            "id" to null,
-            "title" to null,
-            "image" to null,
-            "lastWatched" to null
+            "id" to recipeResult.id,
+            "title" to recipeResult.title,
+            "image" to recipeResult.image,
+            "isFavorite" to recipeResult.isFavorite,
+            "lastAdded" to recipeResult.lastAdded,
+            "lastWatched" to recipeResult.lastWatched
         )
 
         favoritesCollection.add(favoritesData)
