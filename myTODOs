@@ -27,4 +27,12 @@ Code:
 
 - Doppelte Einträge für die Datenbank entfernen und ein System für das Ersetzten eines doppelt vorhandenen Elementes erstellen.
 
+ -> Neu <-
+
+- Implementierung des Favoriten Buttons und der Toggle Funktion. -> **erledigt**
+
+- Animation des FavIcons von der Animierten CardView sepperieren, und diese oberhalb der ImageView mit einbinden. -> **erledigt**
+
+- Snychronisierung der Favoritenfunktion mit Firestore
+
 ----------------------------------------------------------------------------------------------------

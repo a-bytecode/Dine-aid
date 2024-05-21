@@ -56,6 +56,8 @@ data class RecipeResult(
     @Json(name = "imageType")
     val imageType: String,
 
+    var isCardVisible : Boolean = false,
+
     var isFavorite : Boolean? = false,
 
     override val lastAdded : String = "",

@@ -3,13 +3,16 @@ package com.example.dine_aid.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -60,8 +63,8 @@ class RecipeResultAdapter(
         holder.secondCardView.visibility = View.GONE
 
         holder.image.load(recipeData.image) {
-            crossfade(true)
-            crossfade(2000)
+            crossfade(false)
+//            crossfade(2000)
             transformations(RoundedCornersTransformation(10f))
             error(R.drawable.broken_img)
             listener { _, _ ->
@@ -69,14 +72,19 @@ class RecipeResultAdapter(
             }
         }
 
-        holder.clickHereCarView.visibility = View.GONE
+        holder.clickHereCarView.visibility =
+            if (recipeData.isCardVisible) View.VISIBLE else View.GONE
 
         holder.image.setOnClickListener {
-            holder.clickHereCarView.visibility = View.VISIBLE
+            recipeData.isCardVisible = !recipeData.isCardVisible
+
+            holder.clickHereCarView.visibility =
+                if (recipeData.isCardVisible) View.VISIBLE else View.GONE
+
             holder.clickHereCarView.animation =
-                AnimationUtils.loadAnimation(
-                    context,R.anim.slide_up_animation
-            )
+                if (recipeData.isCardVisible)
+                    AnimationUtils.loadAnimation(context,R.anim.slide_up_animation)
+                else AnimationUtils.loadAnimation(context,R.anim.slide_down_animation)
         }
 
         holder.clickHereCarView.setOnClickListener {
@@ -89,8 +97,9 @@ class RecipeResultAdapter(
         }
 
         holder.favicon.setOnClickListener {
-            viewModel.favoriteToggle(holder.favicon,recipeData)
-            notifyItemChanged(position)
+            viewModel.favoriteToggle(recipeData)
+            holder.favicon.setColorFilter(
+                if (recipeData.isFavorite!!) Color.RED else Color.WHITE)
         }
     }
 
