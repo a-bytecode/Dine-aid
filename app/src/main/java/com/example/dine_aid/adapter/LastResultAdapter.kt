@@ -1,7 +1,7 @@
 package com.example.dine_aid.adapter
 
 import android.content.Context
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +17,6 @@ import com.example.dine_aid.R
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.model.FirebaseViewModel
 import com.example.dine_aid.model.MainViewModel
-import org.threeten.bp.format.DateTimeFormatter
-import java.time.LocalDateTime
 
 class LastResultAdapter(val context: Context,
                         val supportFragmentManager: FragmentManager,
@@ -40,6 +38,7 @@ class LastResultAdapter(val context: Context,
         val image = view.findViewById<ImageView>(R.id.imageIV_item)
         val secondCardView = view.findViewById<CardView>(R.id.secondCardView)
         val clickHereCarView = view.findViewById<CardView>(R.id.clickHereToSeeMoreCardView)
+        val favicon = view.findViewById<ImageView>(R.id.favIcon)
     }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -68,14 +67,19 @@ class LastResultAdapter(val context: Context,
             }
         }
 
-        holder.clickHereCarView.visibility = View.GONE
+        holder.clickHereCarView.visibility =
+            if (recipeData.isCardVisible) View.VISIBLE else View.GONE
 
         holder.image.setOnClickListener {
-            holder.clickHereCarView.visibility = View.VISIBLE
+            recipeData.isCardVisible = !recipeData.isCardVisible
+
+            holder.clickHereCarView.visibility =
+                if (recipeData.isCardVisible) View.VISIBLE else View.GONE
+
             holder.clickHereCarView.animation =
-                AnimationUtils.loadAnimation(
-                    context,R.anim.slide_up_animation
-                )
+                if (recipeData.isCardVisible)
+                    AnimationUtils.loadAnimation(context,R.anim.slide_up_animation)
+                else AnimationUtils.loadAnimation(context,R.anim.slide_down_animation)
         }
 
         holder.clickHereCarView.setOnClickListener {
@@ -84,6 +88,12 @@ class LastResultAdapter(val context: Context,
             viewModel.repo.loadRecipeNutritionWidgetByID(recipeData.id)
             firebaseViewModel.saveLastWatchedResult(recipeData)
             firebaseViewModel.updateLastWatchedForRecipe(recipeData.id)
+        }
+
+        holder.favicon.setOnClickListener {
+            viewModel.favoriteToggle(recipeData)
+            holder.favicon.setColorFilter(
+                if (recipeData.isFavorite!!) Color.RED else Color.WHITE)
         }
     }
 

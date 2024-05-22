@@ -63,8 +63,8 @@ class RecipeResultAdapter(
         holder.secondCardView.visibility = View.GONE
 
         holder.image.load(recipeData.image) {
-            crossfade(false)
-//            crossfade(2000)
+            crossfade(true)
+            crossfade(2000)
             transformations(RoundedCornersTransformation(10f))
             error(R.drawable.broken_img)
             listener { _, _ ->
