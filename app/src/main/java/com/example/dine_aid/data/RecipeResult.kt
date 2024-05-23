@@ -58,7 +58,7 @@ data class RecipeResult(
 
     var isCardVisible : Boolean = false,
 
-    var isFavorite : Boolean? = false,
+    var isFavorite : Boolean = false,
 
     override val lastAdded : String = "",
 

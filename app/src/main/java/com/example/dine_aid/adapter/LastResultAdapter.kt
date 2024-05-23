@@ -91,9 +91,9 @@ class LastResultAdapter(val context: Context,
         }
 
         holder.favicon.setOnClickListener {
-            viewModel.favoriteToggle(recipeData)
+            firebaseViewModel.toggleFavoriteStatus(recipeData)
             holder.favicon.setColorFilter(
-                if (recipeData.isFavorite!!) Color.RED else Color.WHITE)
+                if (recipeData.isFavorite) Color.RED else Color.WHITE)
         }
     }
 
