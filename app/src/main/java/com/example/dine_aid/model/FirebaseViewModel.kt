@@ -10,7 +10,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dine_aid.R
-import com.example.dine_aid.UI.ModalBottomSheet.Companion.TAG
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
 import com.google.firebase.Timestamp
@@ -298,24 +297,50 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             .addOnFailureListener { e ->
                 Log.e("SAVE_TO_DATABASE", "Error creating watch history", e)
             }
+    }
+
+    private fun getUserDocumentReference(): DocumentReference {
+        val userId = firebaseAuth.currentUser?.uid ?: throw IllegalStateException("User not logged in")
+        return db.collection("Users").document(userId)
+    }
+
+    fun toggleFavoriteStatus(recipeResult: RecipeResult) {
+
+        val userDocumentReference = getUserDocumentReference()
+
+        recipeResult.isFavorite = !recipeResult.isFavorite
 
         val favoritesCollection = userDocumentReference.collection("Favorites")
+        val favoriteDocument = favoritesCollection.document(recipeResult.id.toString())
 
-        val favoritesData = hashMapOf(
-            "id" to recipeResult.id,
-            "title" to recipeResult.title,
-            "image" to recipeResult.image,
-            "isFavorite" to recipeResult.isFavorite,
-            "lastAdded" to recipeResult.lastAdded,
-            "lastWatched" to recipeResult.lastWatched
-        )
+        if (recipeResult.isFavorite) {
 
-        favoritesCollection.add(favoritesData)
-            .addOnSuccessListener {
-                Log.d("SAVE_TO_DATABASE", "Favorites created successfully")
-            }
-            .addOnFailureListener {e ->
-                Log.e("SAVE_TO_DATABASE", "Error creating favorites", e)
-            }
+            val favoritesData = hashMapOf(
+                "id" to recipeResult.id,
+                "title" to recipeResult.title,
+                "image" to recipeResult.image,
+                "isFavorite" to recipeResult.isFavorite,
+                "lastAdded" to recipeResult.lastAdded,
+                "lastWatched" to recipeResult.lastWatched
+            )
+            // * hier überschreiben wir die Favorite Attributes *
+            favoritesCollection.document(recipeResult.id.toString()).set(favoritesData)
+                .addOnSuccessListener {
+                    Log.d("SYNC_FAVORITE", "${recipeResult.isFavorite}")
+                    Log.d("SYNC_FAVORITE", "Favorites updated successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SYNC_FAVORITE", "Error updating favorites", e)
+                }
+        } else {
+            favoriteDocument.delete()
+                .addOnCompleteListener {
+                    Log.d("SYNC_FAVORITE", "${recipeResult.isFavorite}")
+                    Log.d("SYNC_FAVORITE", "Favorites removed successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SYNC_FAVORITE", "Error removing from favorites", e)
+                }
+        }
     }
 }

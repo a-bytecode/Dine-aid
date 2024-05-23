@@ -185,12 +185,4 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun navigationBetweenFragments(navController: NavController,destinationID: Int) {
         navController.navigate(destinationID)
     }
-
-    fun favoriteToggle(recipeResult: RecipeResult) : Boolean {
-
-        recipeResult.isFavorite = !recipeResult.isFavorite!!
-
-        return recipeResult.isFavorite!!
-
-    }
 }
