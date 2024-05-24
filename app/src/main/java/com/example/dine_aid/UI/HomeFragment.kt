@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.dine_aid.MainActivity
+import com.example.dine_aid.adapter.FavoritesAdapter
 import com.example.dine_aid.model.CustomDialog
 
 class HomeFragment : Fragment() {
@@ -84,7 +85,7 @@ class HomeFragment : Fragment() {
         viewModel.isSearching.observe(viewLifecycleOwner) { isSearching ->
             if (isSearching == false) {
                 firebaseViewModel.fetchLastWatchedResults()
-                binding.latestResultsTV.alpha = 1f
+                binding.latestResultsTV.text = "Latest results"
                 binding.recipeResultRecycler.adapter = lastWatchedAdapter
 
                 firebaseViewModel.lastWatchedLiveData.observe(viewLifecycleOwner) {
@@ -92,7 +93,7 @@ class HomeFragment : Fragment() {
                     Log.d("lastWatchedListCheck1", "lastWatched Size -> ${it.size}")
                 }
             } else {
-                binding.latestResultsTV.alpha = 0f
+                binding.latestResultsTV.text = "Current search results"
                 binding.recipeResultRecycler.adapter = recipeResultAdapter
 
                 viewModel.repo.recipes.observe(viewLifecycleOwner) {
@@ -192,6 +193,13 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun showPopUpMenu(view: View) {
 
+        val favoritesAdapter = FavoritesAdapter(
+            requireContext(),
+            parentFragmentManager,
+            viewModel,
+            firebaseViewModel
+        )
+
         customDialog = CustomDialog(requireContext(),requireActivity())
 
         val closeAppDialogtxt = "Willst du die App Beenden?"
@@ -212,10 +220,13 @@ class HomeFragment : Fragment() {
 
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
-                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(
-                            R.id.fragmentContainerView) as NavHostFragment
-                        val navController = navHostFragment.navController
-                        navController.navigate(R.id.test_Fragment)
+                        firebaseViewModel.fetchFavorites()
+                        binding.latestResultsTV.text = "My Favorites"
+                        binding.recipeResultRecycler.adapter = favoritesAdapter
+
+                        firebaseViewModel.favoritesLiveData.observe(viewLifecycleOwner) { favLiveData ->
+                            favoritesAdapter.submitList(favLiveData)
+                        }
                     }
 
                     R.id.pop_up_deleteAll_home -> {
@@ -271,10 +282,13 @@ class HomeFragment : Fragment() {
 
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
-                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(
-                            R.id.fragmentContainerView) as NavHostFragment
-                        val navController = navHostFragment.navController
-                        navController.navigate(R.id.test_Fragment)
+                        firebaseViewModel.fetchFavorites()
+                        binding.latestResultsTV.text = "My Favorites"
+                        binding.recipeResultRecycler.adapter = favoritesAdapter
+
+                        firebaseViewModel.favoritesLiveData.observe(viewLifecycleOwner) { favLiveData ->
+                            favoritesAdapter.submitList(favLiveData)
+                        }
 
                     }
 

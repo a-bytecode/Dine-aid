@@ -25,18 +25,22 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
     private val db = FirebaseFirestore.getInstance()
 
-    private var listenerRegistration : ListenerRegistration? = null
+    private var listenerRegistration: ListenerRegistration? = null
 
     private val _currentUser = MutableLiveData<FirebaseUser?>(firebaseAuth.currentUser)
     val currentUser: LiveData<FirebaseUser?>
         get() = _currentUser
 
     private val _currentUserType = MutableLiveData<MainViewModel.AuthType>()
-    val currentUserType : LiveData<MainViewModel.AuthType>
+    val currentUserType: LiveData<MainViewModel.AuthType>
         get() = _currentUserType
 
     private val _lastWatchedLiveData = MutableLiveData<List<RecipeResult>>()
-    val lastWatchedLiveData : LiveData<List<RecipeResult>> = _lastWatchedLiveData
+    val lastWatchedLiveData: LiveData<List<RecipeResult>> = _lastWatchedLiveData
+
+    private val _favoritesLiveData = MutableLiveData<List<RecipeResult>>()
+    val favoritesLiveData: LiveData<List<RecipeResult>>
+        get() = _favoritesLiveData
 
     private var accIsCreated = false
 
@@ -60,58 +64,60 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             val userDocumentReference = db.collection("Users").document(user.uid)
             val watchHistoryReference = userDocumentReference.collection("watchHistory")
 
-            listenerRegistration = watchHistoryReference.addSnapshotListener { querySnapshot, error ->
+            listenerRegistration =
+                watchHistoryReference.addSnapshotListener { querySnapshot, error ->
 
-                if (error != null) {
-                    Log.e("Firestore Error", "Listen failed", error)
-                    return@addSnapshotListener
+                    if (error != null) {
+                        Log.e("Firestore Error", "Listen failed", error)
+                        return@addSnapshotListener
+                    }
+
+                    val updatedList = mutableListOf<RecipeResult>()
+
+                    for (document in querySnapshot!!.documents) {
+                        val recipeResult = RecipeResult.fromFirestoreData(document.data!!)
+
+                        updatedList.add(recipeResult)
+
+                    }
+
+                    removeDuplicateWatchHistoryIds()
+
+                    val distinctList = updatedList.distinctBy { it.id }
+
+                    _lastWatchedLiveData.value = distinctList.sortedBy { it.lastWatched }
+
                 }
-
-                val updatedList = mutableListOf<RecipeResult>()
-
-                for (document in querySnapshot!!.documents) {
-                    val recipeResult = RecipeResult.fromFirestoreData(document.data!!)
-
-                    updatedList.add(recipeResult)
-
-                }
-
-                removeDuplicateWatchHistoryIds()
-
-                val distinctList = updatedList.distinctBy { it.id }
-
-                _lastWatchedLiveData.value = distinctList.sortedBy { it.lastWatched }
-
-                }
-            }
         }
+    }
 
-            private fun removeDuplicateWatchHistoryIds() {
-                currentUser.value?.let { user ->
-                    val userDocumentReference = db.collection("Users").document(user.uid)
-                    val watchHistoryReference = userDocumentReference.collection("watchHistory")
+    private fun removeDuplicateWatchHistoryIds() {
+        currentUser.value?.let { user ->
+            val userDocumentReference = db.collection("Users").document(user.uid)
+            val watchHistoryReference = userDocumentReference.collection("watchHistory")
 
-                    // recipeToWatchHistoryMap sorgt dafür,
-                    // dass jede RecipeID durch die gesammte DocumentReferenz verglichen werden kann.
-                    val recipeToWatchHistoryMap = mutableMapOf<Int, MutableList<String>>()
+            // recipeToWatchHistoryMap sorgt dafür,
+            // dass jede RecipeID durch die gesammte DocumentReferenz verglichen werden kann.
+            val recipeToWatchHistoryMap = mutableMapOf<Int, MutableList<String>>()
 
 
-                    watchHistoryReference.get().addOnSuccessListener { querySnapshot ->
+            watchHistoryReference.get().addOnSuccessListener { querySnapshot ->
 
-                        for (document in querySnapshot) {
-                            //Durch den QuerySnapshot bekommen wir unsere RecipeID
-                            val recipeResult = RecipeResult.fromFirestoreData(document.data)
-                            // Default-Wert ist bei getOrPut eine Leere Liste { mutableListOf() }
-                            // somit gibt es eine Leere Liste zurück wenn die RecipeID nicht existiert.
-                            recipeToWatchHistoryMap.getOrPut(recipeResult.id!!) { mutableListOf() }.add(document.id)
-                        }
-                        for ((_, watchHistoryIds) in recipeToWatchHistoryMap) {
-                            if (watchHistoryIds.size > 1) {  // Wenn es Dublikate gibt für die RecipeID,
-                                // behalte ich die erste WatchHistoryID und lösche die restlichen.
-                                for (i in 1 until watchHistoryIds.size) {
-                                    //Hierdurch iterieren wir dann durch die Gesamte Referenz,
-                                    // um das dublizierte RecipeID Element zu löschen
-                                    watchHistoryReference.document(watchHistoryIds[i]).delete()
+                for (document in querySnapshot) {
+                    //Durch den QuerySnapshot bekommen wir unsere RecipeID
+                    val recipeResult = RecipeResult.fromFirestoreData(document.data)
+                    // Default-Wert ist bei getOrPut eine Leere Liste { mutableListOf() }
+                    // somit gibt es eine Leere Liste zurück wenn die RecipeID nicht existiert.
+                    recipeToWatchHistoryMap.getOrPut(recipeResult.id!!) { mutableListOf() }
+                        .add(document.id)
+                }
+                for ((_, watchHistoryIds) in recipeToWatchHistoryMap) {
+                    if (watchHistoryIds.size > 1) {  // Wenn es Dublikate gibt für die RecipeID,
+                        // behalte ich die erste WatchHistoryID und lösche die restlichen.
+                        for (i in 1 until watchHistoryIds.size) {
+                            //Hierdurch iterieren wir dann durch die Gesamte Referenz,
+                            // um das dublizierte RecipeID Element zu löschen
+                            watchHistoryReference.document(watchHistoryIds[i]).delete()
                         }
                     }
                 }
@@ -138,12 +144,20 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 if (snapShot != null) {
                     Log.d("GoodSnap", "Current data: ${snapShot.documents}")
                     val currentTimestamp = Timestamp.now()
-                    watchHistoryReference.document(recipeId.toString()).update("lastWatched", currentTimestamp.toDate())
+                    watchHistoryReference.document(recipeId.toString())
+                        .update("lastWatched", currentTimestamp.toDate())
                         .addOnSuccessListener {
-                            Log.d("UpdateSuccess", "Successfully update with ID: $recipeId, and ${currentTimestamp.toDate()}")
+                            Log.d(
+                                "UpdateSuccess",
+                                "Successfully update with ID: $recipeId, and ${currentTimestamp.toDate()}"
+                            )
                         }
                         .addOnFailureListener { e ->
-                            Log.e("UpdateFailure", "Error updating lastWatched for recipe with ID: $recipeId", e)
+                            Log.e(
+                                "UpdateFailure",
+                                "Error updating lastWatched for recipe with ID: $recipeId",
+                                e
+                            )
                         }
                 } else {
                     Log.d("GoodSnap", "Current data: null")
@@ -152,46 +166,61 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun createAccount(email: String, password: String, context: Context,binding: LoginScreenBinding) {
-        firebaseAuth.createUserWithEmailAndPassword(email,password)
+    fun createAccount(
+        email: String,
+        password: String,
+        context: Context,
+        binding: LoginScreenBinding
+    ) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                firebaseAuth.currentUser?.let { user ->
-                    user.sendEmailVerification()
-                        .addOnCompleteListener { verifiationTask ->
-                            if (verifiationTask.isSuccessful) {
-                                Log.e("EmailSend","task is succesufull ${verifiationTask.isSuccessful}")
-                            } else {
-                                Log.e("EmailSend","task is not succesfull ${verifiationTask.isSuccessful}")
+                if (task.isSuccessful) {
+                    firebaseAuth.currentUser?.let { user ->
+                        user.sendEmailVerification()
+                            .addOnCompleteListener { verifiationTask ->
+                                if (verifiationTask.isSuccessful) {
+                                    Log.e(
+                                        "EmailSend",
+                                        "task is succesufull ${verifiationTask.isSuccessful}"
+                                    )
+                                } else {
+                                    Log.e(
+                                        "EmailSend",
+                                        "task is not succesfull ${verifiationTask.isSuccessful}"
+                                    )
+                                }
                             }
-                        }
+                    }
+                    accIsCreated = true
+                    val accountCreatedText = "Account created $email"
+                    _currentUserType.value = MainViewModel.AuthType.SIGN_IN
+                    _currentUser.value = firebaseAuth.currentUser
+                    saveUserToDatabaseNoRecipeResult(_currentUser.value)
+                    Toast.makeText(
+                        context,
+                        accountCreatedText,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    visibilityRegulator(binding, accountCreatedText)
+                } else {
+                    accIsCreated = false
+                    Toast.makeText(
+                        context,
+                        "${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    task.exception?.message?.let { visibilityRegulator(binding, it) }
                 }
-                accIsCreated = true
-                val accountCreatedText = "Account created $email"
-                _currentUserType.value = MainViewModel.AuthType.SIGN_IN
-                _currentUser.value = firebaseAuth.currentUser
-                saveUserToDatabaseNoRecipeResult(_currentUser.value)
-                Toast.makeText(context,
-                    accountCreatedText,
-                    Toast.LENGTH_SHORT)
-                    .show()
-                visibilityRegulator(binding, accountCreatedText)
-            } else {
-                accIsCreated = false
-                Toast.makeText(context,
-                    "${task.exception?.message}",
-                    Toast.LENGTH_SHORT).show()
-                task.exception?.message?.let { visibilityRegulator(binding, it) }
             }
-        }
             .addOnFailureListener { e ->
-            Log.e("FIREBASE_ERROR","Firebase auth failed",e)
+                Log.e("FIREBASE_ERROR", "Firebase auth failed", e)
             }
     }
 
-    fun visibilityRegulator(binding: LoginScreenBinding,task: String) {
+    fun visibilityRegulator(binding: LoginScreenBinding, task: String) {
         if (!accIsCreated) {
-            Log.d("accCreated","${accIsCreated}")
+            Log.d("accCreated", "${accIsCreated}")
             binding.constraintExistCV.setBackgroundResource(R.drawable.existtvcolor)
             binding.existTV.setTextColor(Color.RED)
             binding.existTVCardView.visibility = View.VISIBLE
@@ -201,7 +230,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 binding.existTVCardView.visibility = View.GONE
             }, 4000)
         } else {
-            Log.d("accCreated","${accIsCreated}")
+            Log.d("accCreated", "${accIsCreated}")
             binding.existTVCardView.visibility = View.VISIBLE
             binding.constraintExistCV.setBackgroundResource(R.drawable.existtvcolor2)
             binding.existTV.setTextColor(Color.GREEN)
@@ -213,17 +242,24 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun loginAccount(email: String,password: String,context: Context,binding: LoginScreenBinding) {
-        firebaseAuth.signInWithEmailAndPassword(email,password)
+    fun loginAccount(
+        email: String,
+        password: String,
+        context: Context,
+        binding: LoginScreenBinding
+    ) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _currentUserType.value = MainViewModel.AuthType.LOGIN
                     _currentUser.value = firebaseAuth.currentUser
                     Log.d("LOGIN_SUCCESS", "Login success", task.exception)
                 } else {
-                    Toast.makeText(context,
+                    Toast.makeText(
+                        context,
                         task.exception?.message,
-                        Toast.LENGTH_SHORT)
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     task.exception?.message?.let { visibilityRegulator(binding, it) }
                 }
@@ -234,10 +270,10 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         firebaseAuth.signOut()
     }
 
-    private fun saveUserToDatabase(user: FirebaseUser?,recipeResult: RecipeResult?) {
+    private fun saveUserToDatabase(user: FirebaseUser?, recipeResult: RecipeResult?) {
 
         if (user != null) {
-            val userData  = hashMapOf(
+            val userData = hashMapOf(
                 "userID" to user.uid,
                 "email" to user.email
             )
@@ -249,10 +285,12 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             userDocumentReference.set(userData)
                 .addOnSuccessListener {
                     recipeResult?.let {
-                        createUserSubCollection(userDocumentReference,it)
+                        createUserSubCollection(userDocumentReference, it)
                     }
-                    Log.d("SAVE_TO_DATABASE",
-                        "saveUserToDatabase executed successfully -> ${user.uid}")
+                    Log.d(
+                        "SAVE_TO_DATABASE",
+                        "saveUserToDatabase executed successfully -> ${user.uid}"
+                    )
 
                 }
                 .addOnFailureListener { e ->
@@ -264,7 +302,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun saveUserToDatabaseNoRecipeResult(user: FirebaseUser?) {
-        saveUserToDatabase(user,null)
+        saveUserToDatabase(user, null)
     }
 
     fun saveLastWatchedResult(recipeResult: RecipeResult) {
@@ -273,11 +311,14 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
             val usersCollection = db.collection("Users")
             val userDocumentReference = usersCollection.document(currentUser.value!!.uid)
 
-            createUserSubCollection(userDocumentReference,recipeResult)
+            createUserSubCollection(userDocumentReference, recipeResult)
         }
     }
 
-    private fun createUserSubCollection(userDocumentReference: DocumentReference, recipeResult: RecipeResult) {
+    private fun createUserSubCollection(
+        userDocumentReference: DocumentReference,
+        recipeResult: RecipeResult
+    ) {
 
         val watchHistoryCollection = userDocumentReference.collection("watchHistory")
 
@@ -300,7 +341,8 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun getUserDocumentReference(): DocumentReference {
-        val userId = firebaseAuth.currentUser?.uid ?: throw IllegalStateException("User not logged in")
+        val userId =
+            firebaseAuth.currentUser?.uid ?: throw IllegalStateException("User not logged in")
         return db.collection("Users").document(userId)
     }
 
@@ -309,6 +351,8 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         val userDocumentReference = getUserDocumentReference()
 
         recipeResult.isFavorite = !recipeResult.isFavorite
+
+        recipeResult.setCurrentTimestamp()
 
         val favoritesCollection = userDocumentReference.collection("Favorites")
         val favoriteDocument = favoritesCollection.document(recipeResult.id.toString())
@@ -323,7 +367,7 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 "lastAdded" to recipeResult.lastAdded,
                 "lastWatched" to recipeResult.lastWatched
             )
-            // * hier überschreiben wir die Favorite Attributes *
+            // * hier überschreiben wir die Favorite Attributes * //
             favoritesCollection.document(recipeResult.id.toString()).set(favoritesData)
                 .addOnSuccessListener {
                     Log.d("SYNC_FAVORITE", "${recipeResult.isFavorite}")
@@ -340,6 +384,32 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
                 }
                 .addOnFailureListener { e ->
                     Log.e("SYNC_FAVORITE", "Error removing from favorites", e)
+                }
+        }
+    }
+
+    fun fetchFavorites() {
+        currentUser.value?.let { user ->
+            val userDocumentReference = db.collection("Users").document(user.uid)
+            val favoritesReference = userDocumentReference.collection("Favorites")
+
+            favoritesReference.get()
+                .addOnSuccessListener { documents ->
+                    val favoriteList = mutableListOf<RecipeResult>()
+                    for (document in documents) {
+                        val recipe = document.toObject(RecipeResult::class.java)
+
+                        recipe.lastWatched?.let {
+                            favoriteList.add(recipe)
+                        }
+                    }
+
+                    val sortedFavListByID = favoriteList.sortedBy { it.lastAdded }
+
+                    _favoritesLiveData.value = sortedFavListByID
+                }
+                .addOnFailureListener { e ->
+                    Log.e("FETCH_FAVORITES", "Error fetching favorites", e)
                 }
         }
     }

@@ -60,7 +60,7 @@ data class RecipeResult(
 
     var isFavorite : Boolean = false,
 
-    override val lastAdded : String = "",
+    override var lastAdded : String? = "",
 
     @Json(name="lastWatched")
     override val lastWatched: String?,
@@ -68,6 +68,9 @@ data class RecipeResult(
     // es ist eine syntaktische Anforderung des Kotlin Kompilers. Es ist erforderlich Override
     // explizit anzugeben damit es die Eigenschaft aus dem Interface überschreiben kann.
 ) : LastWatched, LastAdded {
+
+    constructor() : this(0, "", "", "", false, false, null, null)
+
     companion object {
         fun fromFirestoreData(data: Map<String, Any?>): RecipeResult {
             return RecipeResult(
@@ -80,5 +83,10 @@ data class RecipeResult(
                 lastWatched = data["lastWatched"] as? String
             )
         }
+    }
+
+    fun setCurrentTimestamp() {
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
+        lastAdded = LocalDateTime.now().format(formatter)
     }
 }
