@@ -9,7 +9,11 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dine_aid.R
+import com.example.dine_aid.adapter.FavoritesAdapter
+import com.example.dine_aid.adapter.LastResultAdapter
+import com.example.dine_aid.adapter.RecipeResultAdapter
 import com.example.dine_aid.data.RecipeResult
 import com.example.dine_aid.databinding.LoginScreenBinding
 import com.google.firebase.Timestamp
@@ -346,7 +350,59 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         return db.collection("Users").document(userId)
     }
 
-    fun toggleFavoriteStatus(recipeResult: RecipeResult) {
+    fun toggleFavoriteStatus(recipeResult: RecipeResult,
+                             position: Int,
+                             adapter:FavoritesAdapter) {
+
+        Log.d("SYNC_FAVORITE", "${recipeResult.isFavorite}")
+
+        val userDocumentReference = getUserDocumentReference()
+
+        recipeResult.isFavorite = !recipeResult.isFavorite
+
+        recipeResult.setCurrentTimestamp()
+
+        val favoritesCollection = userDocumentReference.collection("Favorites")
+        val favoriteDocument = favoritesCollection.document(recipeResult.id.toString())
+
+        if (recipeResult.isFavorite) {
+
+            val favoritesData = hashMapOf(
+                "id" to recipeResult.id,
+                "title" to recipeResult.title,
+                "image" to recipeResult.image,
+                "isFavorite" to recipeResult.isFavorite,
+                "lastAdded" to recipeResult.lastAdded,
+                "lastWatched" to recipeResult.lastWatched
+            )
+            // * hier überschreiben wir die Favorite Attributes * //
+            favoritesCollection.document(recipeResult.id.toString()).set(favoritesData)
+                .addOnSuccessListener {
+                    Log.d("SYNC_FAVORITE", "${recipeResult.isFavorite}")
+                    Log.d("SYNC_FAVORITE", "Favorites updated successfully")
+                    adapter.notifyItemChanged(position)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SYNC_FAVORITE", "Error updating favorites", e)
+                }
+        } else {
+            favoriteDocument.delete()
+                .addOnCompleteListener {
+                    Log.d("SYNC_FAVORITE", "${recipeResult.isFavorite}")
+                    Log.d("SYNC_FAVORITE", "Favorites removed successfully")
+                    val updatedDataset = adapter.dataset.toMutableList().apply {
+                        removeAt(position)
+                    }
+
+                    adapter.submitList(updatedDataset)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SYNC_FAVORITE", "Error removing from favorites", e)
+                }
+        }
+    }
+
+    fun toggleFavoriteStatusAllAdapters(recipeResult: RecipeResult) {
 
         val userDocumentReference = getUserDocumentReference()
 
