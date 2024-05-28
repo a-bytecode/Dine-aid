@@ -224,8 +224,8 @@ class HomeFragment : Fragment() {
                         binding.latestResultsTV.text = "My Favorites"
                         binding.recipeResultRecycler.adapter = favoritesAdapter
 
-                        firebaseViewModel.favoritesLiveData.observe(viewLifecycleOwner) { favLiveData ->
-                            favoritesAdapter.submitList(favLiveData)
+                        firebaseViewModel.favoritesLiveData.observe(viewLifecycleOwner) {
+                            favoritesAdapter.submitList(it)
                         }
                     }
 

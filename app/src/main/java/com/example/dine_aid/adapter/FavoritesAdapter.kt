@@ -2,8 +2,7 @@ package com.example.dine_aid.adapter
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Handler
-import android.view.LayoutInflater
+ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -26,7 +25,7 @@ class FavoritesAdapter(
     val firebaseViewModel: FirebaseViewModel
 ): RecyclerView.Adapter<FavoritesAdapter.ItemViewHolder>() {
 
-    private var dataset = listOf<RecipeResult>()
+    var dataset = listOf<RecipeResult>()
 
     fun submitList(recipeResults: List<RecipeResult>) {
         dataset = recipeResults.sortedByDescending { recipeResult ->
@@ -68,7 +67,6 @@ class FavoritesAdapter(
             }
         }
 
-
         holder.clickHereCarView.visibility =
             if (recipeData.isCardVisible) View.VISIBLE else View.GONE
 
@@ -93,11 +91,9 @@ class FavoritesAdapter(
         }
 
         holder.favicon.setOnClickListener {
-            firebaseViewModel.toggleFavoriteStatus(recipeData)
-            Handler().post{
+            firebaseViewModel.toggleFavoriteStatus(recipeData, position,this)
                 holder.favicon.setColorFilter(
                 if (recipeData.isFavorite) Color.RED else Color.WHITE)
-            }
         }
     }
 

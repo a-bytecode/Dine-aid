@@ -94,12 +94,11 @@ class RecipeResultAdapter(
         }
 
         holder.favicon.setOnClickListener {
-            firebaseViewModel.toggleFavoriteStatus(recipeData)
+            firebaseViewModel.toggleFavoriteStatusAllAdapters(recipeData)
             holder.favicon.setColorFilter(
                 if (recipeData.isFavorite) Color.RED else Color.WHITE)
         }
-        notifyItemChanged(position)
-    }
+     }
 
     override fun getItemCount(): Int {
         return dataset.size

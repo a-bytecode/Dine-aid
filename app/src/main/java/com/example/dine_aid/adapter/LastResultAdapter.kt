@@ -24,7 +24,7 @@ class LastResultAdapter(val context: Context,
                         val firebaseViewModel: FirebaseViewModel
 ): RecyclerView.Adapter<LastResultAdapter.ItemViewHolder>() {
 
-    private var dataset = listOf<RecipeResult>()
+    var dataset = listOf<RecipeResult>()
 
     fun submitList(recipeResults: List<RecipeResult>) {
         dataset = recipeResults.sortedByDescending { recipeResult ->
@@ -91,7 +91,7 @@ class LastResultAdapter(val context: Context,
         }
 
         holder.favicon.setOnClickListener {
-            firebaseViewModel.toggleFavoriteStatus(recipeData)
+            firebaseViewModel.toggleFavoriteStatusAllAdapters(recipeData)
             holder.favicon.setColorFilter(
                 if (recipeData.isFavorite) Color.RED else Color.WHITE)
         }
