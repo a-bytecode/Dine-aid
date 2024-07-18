@@ -200,6 +200,13 @@ class HomeFragment : Fragment() {
             firebaseViewModel
         )
 
+        val lastWatchedAdapter = LastResultAdapter(
+            requireContext(),
+            parentFragmentManager,
+            viewModel,
+            firebaseViewModel
+        )
+
         customDialog = CustomDialog(requireContext(),requireActivity())
 
         val closeAppDialogtxt = "Willst du die App Beenden?"
@@ -217,6 +224,16 @@ class HomeFragment : Fragment() {
             popupMenu.setOnMenuItemClickListener {
 
                 when (it.itemId) {
+
+                    R.id.pop_up_last_result -> {
+                        firebaseViewModel.fetchLastWatchedResults()
+                        binding.latestResultsTV.text = "Latest Results"
+                        binding.recipeResultRecycler.adapter = lastWatchedAdapter
+
+                        firebaseViewModel.lastWatchedLiveData.observe(viewLifecycleOwner) {
+                            lastWatchedAdapter.submitList(it)
+                        }
+                    }
 
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
@@ -273,6 +290,7 @@ class HomeFragment : Fragment() {
             popupMenu.menu.findItem(R.id.pop_up_deleteAll_home).setIcon(R.drawable.baseline_delete_24)
             popupMenu.menu.findItem(R.id.pop_up_logout_home).setIcon(R.drawable.baseline_dangerous_24)
             popupMenu.menu.findItem(R.id.pop_up_end_home).setIcon(R.drawable.baseline_exit_to_app_24)
+            popupMenu.menu.findItem(R.id.pop_up_last_result).setIcon(R.drawable.baseline_airline_stops_24)
 
             popupMenu.setForceShowIcon(true)
 
@@ -280,14 +298,24 @@ class HomeFragment : Fragment() {
 
                 when (menuItem.itemId) {
 
+                    R.id.pop_up_last_result -> {
+                        firebaseViewModel.fetchLastWatchedResults()
+                        binding.latestResultsTV.text = "Latest Results"
+                        binding.recipeResultRecycler.adapter = lastWatchedAdapter
+
+                        firebaseViewModel.lastWatchedLiveData.observe(viewLifecycleOwner) {
+                            lastWatchedAdapter.submitList(it)
+                        }
+                    }
+
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
                         firebaseViewModel.fetchFavorites()
                         binding.latestResultsTV.text = "My Favorites"
                         binding.recipeResultRecycler.adapter = favoritesAdapter
 
-                        firebaseViewModel.favoritesLiveData.observe(viewLifecycleOwner) { favLiveData ->
-                            favoritesAdapter.submitList(favLiveData)
+                        firebaseViewModel.favoritesLiveData.observe(viewLifecycleOwner) {
+                            favoritesAdapter.submitList(it)
                         }
 
                     }
