@@ -12,9 +12,6 @@
             android:id="@+id/action_homeFragment_to_bottomSheetFragment"
             app:destination="@id/bottomSheetFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_test_Fragment"
-            app:destination="@id/test_Fragment" />
-        <action
             android:id="@+id/action_homeFragment_to_login_Fragment"
             app:destination="@id/login_Fragment" />
     </fragment>
@@ -26,10 +23,6 @@
             android:id="@+id/action_bottomSheetFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/test_Fragment"
-        android:name="com.example.dine_aid.UI.Test_Fragment"
-        android:label="Test_Fragment" />
     <fragment
         android:id="@+id/login_Fragment"
         android:name="com.example.dine_aid.UI.Login_Fragment"

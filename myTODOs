@@ -7,9 +7,9 @@ Layout:
 
 - Entwurf des eigenen Icons für das App Symbol -> **erledigt**
 
-- Verkleinerungs Option für die SearchView im Homefragment durch Animation per Click Implementieren.
+- Verkleinerungs Option für die SearchView im Homefragment durch Animation per Click Implementieren.  -> **erledigt**
 
-- Hamburger Menü für das Pop up Menü erstellen.
+- Hamburger Menü für das Pop up Menü erstellen.  -> **erledigt**
 
 - Pop Up Menu für die Favoriten und Profil Settings / Logout Settings implementieren.
 
@@ -33,6 +33,23 @@ Code:
 
 - Animation des FavIcons von der Animierten CardView sepperieren, und diese oberhalb der ImageView mit einbinden. -> **erledigt**
 
-- Snychronisierung der Favoritenfunktion mit Firestore
+- Snychronisierung der Favoritenfunktion mit Firestore  -> **erledigt**
+_____________________________________________________________________________________________________
+_____________________________________________________________________________________________________
 
-----------------------------------------------------------------------------------------------------
+ -> Neu <- 18.Juli 2024
+
+ - Löschfunktion für die Favoriten erstellen, für das Löschen der Favoriten Einträge.
+ - Favoriten Icon auch in den Favoriten Rot anzeigen lassen, es verliert die Farbe in der FavoritenView.
+
+ - Settings Fragment erstellen für:
+ Das Löschen von eigenem Account.
+ Tipps Anzeigen.
+ Translater Übersetzter auf DE an/aus.
+ 2 Faktor an/aus (Toggle)
+
+ - Email Verifikations Vorgang Optimieren.
+ - 2 Faktor Ident implementieren.
+
+_____________________________________________________________________________________________________
+_____________________________________________________________________________________________________
