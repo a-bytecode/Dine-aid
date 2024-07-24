@@ -63,6 +63,22 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun deleteFavorites() {
+        currentUser.value?.let { user ->
+            val userDocumentReference = db.collection("Users").document(user.uid)
+            val favoritesReference = userDocumentReference.collection("favorites")
+
+            favoritesReference.get().addOnSuccessListener { documents ->
+                for (document in documents) {
+                    document.reference.delete()
+                }
+            }.addOnFailureListener { exception ->
+                Log.e("FirebaseViewModel", "Fehler beim Löschen der Favoriten", exception)
+            }
+        }
+    }
+
+
     fun fetchLastWatchedResults() {
         currentUser.value?.let { user ->
             val userDocumentReference = db.collection("Users").document(user.uid)

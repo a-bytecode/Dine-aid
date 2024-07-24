@@ -215,6 +215,9 @@ class HomeFragment : Fragment() {
 
         val deleteDialogtxt = "Möchtest du deine Einträge Löschen?"
 
+        val deleteFavDialogtxt = "Möchtest du die Favoriten Löschen?"
+
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
 
             val popupMenu = PopupMenu(requireContext(), view)
@@ -283,6 +286,7 @@ class HomeFragment : Fragment() {
             val wrapper = ContextThemeWrapper(requireContext(),R.style.popupMenuStyle)
             val popupMenu = PopupMenu(wrapper, view)
             val inflater = popupMenu.menuInflater
+            var currentView = ""
 
             inflater.inflate(R.menu.popup_menu,popupMenu.menu)
 
@@ -299,6 +303,8 @@ class HomeFragment : Fragment() {
                 when (menuItem.itemId) {
 
                     R.id.pop_up_last_result -> {
+                        currentView = "Latest Results"
+                        Log.d("currentViewX","${currentView}, aktuell")
                         firebaseViewModel.fetchLastWatchedResults()
                         binding.latestResultsTV.text = "Latest Results"
                         binding.recipeResultRecycler.adapter = lastWatchedAdapter
@@ -310,6 +316,9 @@ class HomeFragment : Fragment() {
 
                     R.id.pop_up_fav_home -> {
                         // TODO: Favoriten Screen Verbinden
+                        currentView = "Favorites"
+                        Log.d("currentViewX","${currentView}, aktuell")
+
                         firebaseViewModel.fetchFavorites()
                         binding.latestResultsTV.text = "My Favorites"
                         binding.recipeResultRecycler.adapter = favoritesAdapter
@@ -321,12 +330,35 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.pop_up_deleteAll_home -> {
+                        Log.d("currentViewX","${currentView}, aktuell")
                         customDialog.showDialog()
-                        customDialog.setTextDialog(deleteDialogtxt)
                         customDialog.setIcon(R.drawable.baseline_delete_black)
-                        customDialog.setAnswerYesAction {
-                            firebaseViewModel.deleteWatchHistory()
+
+                        when(currentView) {
+                            "Favorites" -> {
+                                Log.d("currentViewX","${currentView}, aktuell")
+                                customDialog.setTextDialog(deleteFavDialogtxt)
+                                customDialog.setAnswerYesAction {
+                                    Log.d("currentViewX","${currentView}, aktuell")
+
+                                    firebaseViewModel.deleteFavorites()
+                                }
+                            }
+                            "Latest Results" -> {
+                                Log.d("currentViewX","${currentView}, aktuell")
+                                customDialog.setTextDialog(deleteDialogtxt)
+                                customDialog.setAnswerYesAction {
+
+                                    Log.d("currentViewX","${currentView}, aktuell")
+                                    firebaseViewModel.deleteWatchHistory()
+                                }
+                            }
                         }
+//                        customDialog.setTextDialog(deleteDialogtxt)
+//                        customDialog.setIcon(R.drawable.baseline_delete_black)
+//                        customDialog.setAnswerYesAction {
+//                            firebaseViewModel.deleteWatchHistory()
+//                        }
                     }
 
                     R.id.pop_up_end_home -> {
